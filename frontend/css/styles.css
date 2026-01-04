@@ -1,0 +1,100 @@
+/* ------------------------------------------------------------------
+   Design Tokens
+------------------------------------------------------------------ */
+:root {
+  --bg-paper: #fdfbf7;
+  --ink-black: #1a1a1a;
+  --ink-gray: #4a4a4a;
+  --border-color: #e5e5e5;
+}
+
+/* ------------------------------------------------------------------
+   Base
+------------------------------------------------------------------ */
+body {
+  background-color: var(--bg-paper);
+  color: var(--ink-black);
+  font-family: "Lora", serif;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Playfair Display", serif;
+}
+
+/* ------------------------------------------------------------------
+   Media
+------------------------------------------------------------------ */
+.img-newspaper {
+  filter: grayscale(100%) contrast(1.1);
+  transition: filter 0.35s ease;
+  will-change: filter;
+}
+
+/* Your cards use `.group`, so hover should reference that */
+.group:hover .img-newspaper {
+  filter: grayscale(0%) contrast(1);
+}
+
+/* ------------------------------------------------------------------
+   Scrollbars
+------------------------------------------------------------------ */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ------------------------------------------------------------------
+   Loader
+------------------------------------------------------------------ */
+.loader {
+  width: 100%;
+  text-align: center;
+  padding: 2rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.loader.active {
+  opacity: 1;
+}
+
+/* ------------------------------------------------------------------
+   Nav link underline animation
+------------------------------------------------------------------ */
+.nav-link {
+  position: relative;
+  display: inline-block;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 1px;
+  bottom: -2px;
+  left: 0;
+  background-color: var(--ink-black);
+  transition: width 0.25s ease;
+}
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
+
+/* ------------------------------------------------------------------
+   Modal transitions
+------------------------------------------------------------------ */
+#modal-overlay {
+  transition: opacity 0.25s ease;
+}
+#modal-content {
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
