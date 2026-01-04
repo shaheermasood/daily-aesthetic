@@ -7,13 +7,41 @@ router.get('/', async (req, res) => {
   try {
     const offset = parseInt(req.query.offset) || 0;
     const limit = parseInt(req.query.limit) || 6;
+    const search = req.query.search || '';
+    const tag = req.query.tag || '';
+
+    let queryParams = [];
+    let paramIndex = 1;
+    let whereConditions = [];
+
+    // Add search condition
+    if (search) {
+      whereConditions.push(`(title ILIKE $${paramIndex} OR excerpt ILIKE $${paramIndex} OR description ILIKE $${paramIndex})`);
+      queryParams.push(`%${search}%`);
+      paramIndex++;
+    }
+
+    // Add tag filter condition
+    if (tag) {
+      whereConditions.push(`$${paramIndex} = ANY(tags)`);
+      queryParams.push(tag);
+      paramIndex++;
+    }
+
+    const whereClause = whereConditions.length > 0 ? 'WHERE ' + whereConditions.join(' AND ') : '';
+
+    // Add offset and limit
+    queryParams.push(offset, limit);
 
     const result = await pool.query(
-      'SELECT * FROM projects ORDER BY created_at DESC OFFSET $1 LIMIT $2',
-      [offset, limit]
+      `SELECT * FROM projects ${whereClause} ORDER BY created_at DESC OFFSET $${paramIndex} LIMIT $${paramIndex + 1}`,
+      queryParams
     );
 
-    const countResult = await pool.query('SELECT COUNT(*) FROM projects');
+    const countResult = await pool.query(
+      `SELECT COUNT(*) FROM projects ${whereClause}`,
+      queryParams.slice(0, -2)
+    );
     const total = parseInt(countResult.rows[0].count);
 
     res.json({

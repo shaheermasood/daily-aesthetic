@@ -7,13 +7,33 @@ router.get('/', async (req, res) => {
   try {
     const offset = parseInt(req.query.offset) || 0;
     const limit = parseInt(req.query.limit) || 1;
+    const search = req.query.search || '';
+
+    let queryParams = [];
+    let paramIndex = 1;
+    let whereConditions = [];
+
+    // Add search condition
+    if (search) {
+      whereConditions.push(`(title ILIKE $${paramIndex} OR author ILIKE $${paramIndex} OR content ILIKE $${paramIndex})`);
+      queryParams.push(`%${search}%`);
+      paramIndex++;
+    }
+
+    const whereClause = whereConditions.length > 0 ? 'WHERE ' + whereConditions.join(' AND ') : '';
+
+    // Add offset and limit
+    queryParams.push(offset, limit);
 
     const result = await pool.query(
-      'SELECT * FROM articles ORDER BY created_at DESC OFFSET $1 LIMIT $2',
-      [offset, limit]
+      `SELECT * FROM articles ${whereClause} ORDER BY created_at DESC OFFSET $${paramIndex} LIMIT $${paramIndex + 1}`,
+      queryParams
     );
 
-    const countResult = await pool.query('SELECT COUNT(*) FROM articles');
+    const countResult = await pool.query(
+      `SELECT COUNT(*) FROM articles ${whereClause}`,
+      queryParams.slice(0, -2)
+    );
     const total = parseInt(countResult.rows[0].count);
 
     res.json({

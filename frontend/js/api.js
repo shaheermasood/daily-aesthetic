@@ -10,11 +10,17 @@ const api = {
    * Fetch projects with pagination
    * @param {number} offset - Starting index
    * @param {number} limit - Number of items to fetch
+   * @param {string} search - Search query
+   * @param {string} tag - Tag filter
    * @returns {Promise<Object>} Response with data and pagination info
    */
-  async getProjects(offset = 0, limit = 6) {
+  async getProjects(offset = 0, limit = 6, search = '', tag = '') {
     try {
-      const response = await fetch(`${API_BASE_URL}/projects?offset=${offset}&limit=${limit}`);
+      let url = `${API_BASE_URL}/projects?offset=${offset}&limit=${limit}`;
+      if (search) url += `&search=${encodeURIComponent(search)}`;
+      if (tag) url += `&tag=${encodeURIComponent(tag)}`;
+
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -47,11 +53,15 @@ const api = {
    * Fetch articles with pagination
    * @param {number} offset - Starting index
    * @param {number} limit - Number of items to fetch
+   * @param {string} search - Search query
    * @returns {Promise<Object>} Response with data and pagination info
    */
-  async getArticles(offset = 0, limit = 1) {
+  async getArticles(offset = 0, limit = 1, search = '') {
     try {
-      const response = await fetch(`${API_BASE_URL}/articles?offset=${offset}&limit=${limit}`);
+      let url = `${API_BASE_URL}/articles?offset=${offset}&limit=${limit}`;
+      if (search) url += `&search=${encodeURIComponent(search)}`;
+
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -84,11 +94,17 @@ const api = {
    * Fetch products with pagination
    * @param {number} offset - Starting index
    * @param {number} limit - Number of items to fetch
+   * @param {string} search - Search query
+   * @param {string} tag - Tag filter
    * @returns {Promise<Object>} Response with data and pagination info
    */
-  async getProducts(offset = 0, limit = 6) {
+  async getProducts(offset = 0, limit = 6, search = '', tag = '') {
     try {
-      const response = await fetch(`${API_BASE_URL}/products?offset=${offset}&limit=${limit}`);
+      let url = `${API_BASE_URL}/products?offset=${offset}&limit=${limit}`;
+      if (search) url += `&search=${encodeURIComponent(search)}`;
+      if (tag) url += `&tag=${encodeURIComponent(tag)}`;
+
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

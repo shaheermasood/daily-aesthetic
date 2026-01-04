@@ -19,6 +19,11 @@ const state = {
   blogIndex: 0,
   isLoading: false,
   io: null,
+  archiveSearch: '',
+  archiveTag: '',
+  shopSearch: '',
+  shopTag: '',
+  blogSearch: '',
 };
 
 /* ================================================================
@@ -93,9 +98,30 @@ function renderArchive() {
     <div class="w-full min-h-screen border-l-0 md:border-l border-black">
       <div class="py-12 px-6 md:px-12 border-b border-black bg-[#FDFBF7]">
         <h2 class="text-4xl md:text-6xl font-bold mb-4">The Archive</h2>
-        <p class="font-serif text-gray-600 italic max-w-xl">
+        <p class="font-serif text-gray-600 italic max-w-xl mb-6">
           A curated collection of past works, preserving the dialogue between space, form, and light.
         </p>
+
+        <div class="flex flex-col md:flex-row gap-4 mt-6">
+          <div class="flex-grow relative">
+            <input
+              type="text"
+              id="archive-search"
+              placeholder="Search projects..."
+              class="w-full px-4 py-2 border border-black focus:outline-none focus:ring-2 focus:ring-black text-sm"
+            />
+            <i data-lucide="search" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+          </div>
+          <div class="relative">
+            <select
+              id="archive-tag-filter"
+              class="w-full md:w-48 px-4 py-2 border border-black focus:outline-none focus:ring-2 focus:ring-black text-sm appearance-none bg-white"
+            >
+              <option value="">All Tags</option>
+            </select>
+            <i data-lucide="filter" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"></i>
+          </div>
+        </div>
       </div>
 
       <div id="archive-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0"></div>
@@ -114,14 +140,37 @@ function renderArchive() {
 function renderShop() {
   return `
     <div class="w-full min-h-screen border-l-0 md:border-l border-black">
-      <div class="py-12 px-6 md:px-12 border-b border-black bg-[#FDFBF7] flex flex-col md:flex-row justify-between md:items-end gap-6">
-        <div>
-          <h2 class="text-4xl md:text-6xl font-bold mb-4">The Shop</h2>
-          <p class="font-serif text-gray-600 italic max-w-xl">Curated objects of utility and beauty for the modern minimalist.</p>
+      <div class="py-12 px-6 md:px-12 border-b border-black bg-[#FDFBF7]">
+        <div class="flex flex-col md:flex-row justify-between md:items-end gap-6 mb-6">
+          <div>
+            <h2 class="text-4xl md:text-6xl font-bold mb-4">The Shop</h2>
+            <p class="font-serif text-gray-600 italic max-w-xl">Curated objects of utility and beauty for the modern minimalist.</p>
+          </div>
+          <div class="flex items-center space-x-2 text-sm font-bold uppercase tracking-widest text-gray-400 pb-2">
+            <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+            <span>Cart (0)</span>
+          </div>
         </div>
-        <div class="flex items-center space-x-2 text-sm font-bold uppercase tracking-widest text-gray-400 pb-2">
-          <i data-lucide="shopping-bag" class="w-4 h-4"></i>
-          <span>Cart (0)</span>
+
+        <div class="flex flex-col md:flex-row gap-4 mt-6">
+          <div class="flex-grow relative">
+            <input
+              type="text"
+              id="shop-search"
+              placeholder="Search products..."
+              class="w-full px-4 py-2 border border-black focus:outline-none focus:ring-2 focus:ring-black text-sm"
+            />
+            <i data-lucide="search" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+          </div>
+          <div class="relative">
+            <select
+              id="shop-tag-filter"
+              class="w-full md:w-48 px-4 py-2 border border-black focus:outline-none focus:ring-2 focus:ring-black text-sm appearance-none bg-white"
+            >
+              <option value="">All Categories</option>
+            </select>
+            <i data-lucide="filter" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"></i>
+          </div>
         </div>
       </div>
 
@@ -140,10 +189,22 @@ function renderShop() {
 function renderBlog() {
   return `
     <div class="w-full min-h-screen border-l-0 md:border-l border-black">
-      <div class="py-16 px-6 flex justify-center border-b border-black">
-        <div class="text-center">
+      <div class="py-12 px-6 md:px-12 border-b border-black bg-[#FDFBF7]">
+        <div class="text-center mb-6">
           <h2 class="text-4xl font-bold uppercase tracking-widest mb-2">The Columnist</h2>
           <p class="font-serif italic text-gray-500">Weekly musings on design theory.</p>
+        </div>
+
+        <div class="max-w-2xl mx-auto mt-8">
+          <div class="relative">
+            <input
+              type="text"
+              id="blog-search"
+              placeholder="Search articles..."
+              class="w-full px-4 py-2 border border-black focus:outline-none focus:ring-2 focus:ring-black text-sm"
+            />
+            <i data-lucide="search" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+          </div>
         </div>
       </div>
 
@@ -209,7 +270,7 @@ async function loadArchiveItems(count = 6) {
   setLoading(true);
 
   try {
-    const response = await api.getProjects(state.archiveIndex, count);
+    const response = await api.getProjects(state.archiveIndex, count, state.archiveSearch, state.archiveTag);
     const projects = response.data;
 
     let html = "";
@@ -258,7 +319,7 @@ async function loadShopItems(count = 6) {
   setLoading(true);
 
   try {
-    const response = await api.getProducts(state.shopIndex, count);
+    const response = await api.getProducts(state.shopIndex, count, state.shopSearch, state.shopTag);
     const products = response.data;
 
     let html = "";
@@ -304,7 +365,7 @@ async function loadBlogArticle() {
   setLoading(true);
 
   try {
-    const response = await api.getArticles(state.blogIndex, 1);
+    const response = await api.getArticles(state.blogIndex, 1, state.blogSearch);
     const articles = response.data;
 
     if (articles.length === 0) {
@@ -342,6 +403,134 @@ async function loadBlogArticle() {
   } catch (error) {
     console.error('Failed to load blog article:', error);
     setLoading(false);
+  }
+}
+
+/* ================================================================
+   Search and Filter helpers
+================================================================= */
+let searchDebounceTimer = null;
+
+function setupArchiveSearch() {
+  const searchInput = $("#archive-search");
+  const tagFilter = $("#archive-tag-filter");
+
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      clearTimeout(searchDebounceTimer);
+      searchDebounceTimer = setTimeout(() => {
+        state.archiveSearch = e.target.value.trim();
+        state.archiveIndex = 0;
+        const grid = $("#archive-grid");
+        if (grid) grid.innerHTML = '';
+        loadArchiveItems(9);
+      }, 300);
+    });
+  }
+
+  if (tagFilter) {
+    tagFilter.addEventListener("change", (e) => {
+      state.archiveTag = e.target.value;
+      state.archiveIndex = 0;
+      const grid = $("#archive-grid");
+      if (grid) grid.innerHTML = '';
+      loadArchiveItems(9);
+    });
+  }
+}
+
+function setupShopSearch() {
+  const searchInput = $("#shop-search");
+  const tagFilter = $("#shop-tag-filter");
+
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      clearTimeout(searchDebounceTimer);
+      searchDebounceTimer = setTimeout(() => {
+        state.shopSearch = e.target.value.trim();
+        state.shopIndex = 0;
+        const grid = $("#shop-grid");
+        if (grid) grid.innerHTML = '';
+        loadShopItems(9);
+      }, 300);
+    });
+  }
+
+  if (tagFilter) {
+    tagFilter.addEventListener("change", (e) => {
+      state.shopTag = e.target.value;
+      state.shopIndex = 0;
+      const grid = $("#shop-grid");
+      if (grid) grid.innerHTML = '';
+      loadShopItems(9);
+    });
+  }
+}
+
+function setupBlogSearch() {
+  const searchInput = $("#blog-search");
+
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      clearTimeout(searchDebounceTimer);
+      searchDebounceTimer = setTimeout(() => {
+        state.blogSearch = e.target.value.trim();
+        state.blogIndex = 0;
+        const feed = $("#blog-feed");
+        if (feed) feed.innerHTML = '';
+        loadBlogArticle();
+      }, 300);
+    });
+  }
+}
+
+async function populateTagFilters() {
+  try {
+    // Fetch some items to get available tags
+    const projectsResponse = await api.getProjects(0, 100);
+    const productsResponse = await api.getProducts(0, 100);
+
+    // Extract unique tags from projects
+    const projectTags = new Set();
+    projectsResponse.data.forEach(project => {
+      if (project.tags && Array.isArray(project.tags)) {
+        project.tags.forEach(tag => projectTags.add(tag));
+      }
+    });
+
+    // Extract unique tags from products
+    const productTags = new Set();
+    productsResponse.data.forEach(product => {
+      if (product.tags && Array.isArray(product.tags)) {
+        product.tags.forEach(tag => productTags.add(tag));
+      }
+    });
+
+    // Populate archive tag filter
+    const archiveTagFilter = $("#archive-tag-filter");
+    if (archiveTagFilter && projectTags.size > 0) {
+      const sortedProjectTags = Array.from(projectTags).sort();
+      sortedProjectTags.forEach(tag => {
+        const option = document.createElement('option');
+        option.value = tag;
+        option.textContent = tag;
+        archiveTagFilter.appendChild(option);
+      });
+    }
+
+    // Populate shop tag filter
+    const shopTagFilter = $("#shop-tag-filter");
+    if (shopTagFilter && productTags.size > 0) {
+      const sortedProductTags = Array.from(productTags).sort();
+      sortedProductTags.forEach(tag => {
+        const option = document.createElement('option');
+        option.value = tag;
+        option.textContent = tag;
+        shopTagFilter.appendChild(option);
+      });
+    }
+  } catch (error) {
+    console.error('Failed to populate tag filters:', error);
   }
 }
 
@@ -425,6 +614,10 @@ function router(view) {
     app.innerHTML = renderArchive();
     refreshIcons();
     state.archiveIndex = 0;
+    state.archiveSearch = '';
+    state.archiveTag = '';
+    populateTagFilters();
+    setupArchiveSearch();
     loadArchiveItems(9);
     mountInfiniteScroll();
     window.scrollTo(0, 0);
@@ -435,6 +628,10 @@ function router(view) {
     app.innerHTML = renderShop();
     refreshIcons();
     state.shopIndex = 0;
+    state.shopSearch = '';
+    state.shopTag = '';
+    populateTagFilters();
+    setupShopSearch();
     loadShopItems(9);
     mountInfiniteScroll();
     window.scrollTo(0, 0);
@@ -445,6 +642,8 @@ function router(view) {
     app.innerHTML = renderBlog();
     refreshIcons();
     state.blogIndex = 0;
+    state.blogSearch = '';
+    setupBlogSearch();
     loadBlogArticle();
     mountInfiniteScroll();
     window.scrollTo(0, 0);
