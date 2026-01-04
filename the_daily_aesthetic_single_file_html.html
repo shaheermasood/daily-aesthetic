@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Daily Aesthetic</title>
+
+  <!-- Tailwind + Fonts + Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:wght@400;500;600;700;900&display=swap"
+    rel="stylesheet"
+  />
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* ------------------------------------------------------------------
+       Design Tokens
+    ------------------------------------------------------------------ */
+    :root {
+      --bg-paper: #fdfbf7;
+      --ink-black: #1a1a1a;
+      --ink-gray: #4a4a4a;
+      --border-color: #e5e5e5;
+    }
+
+    /* ------------------------------------------------------------------
+       Base
+    ------------------------------------------------------------------ */
+    body {
+      background-color: var(--bg-paper);
+      color: var(--ink-black);
+      font-family: "Lora", serif;
+      overflow-x: hidden;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-family: "Playfair Display", serif;
+    }
+
+    /* ------------------------------------------------------------------
+       Media
+    ------------------------------------------------------------------ */
+    .img-newspaper {
+      filter: grayscale(100%) contrast(1.1);
+      transition: filter 0.35s ease;
+      will-change: filter;
+    }
+
+    /* Your cards use `.group`, so hover should reference that */
+    .group:hover .img-newspaper {
+      filter: grayscale(0%) contrast(1);
+    }
+
+    /* ------------------------------------------------------------------
+       Scrollbars
+    ------------------------------------------------------------------ */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* ------------------------------------------------------------------
+       Loader
+    ------------------------------------------------------------------ */
+    .loader {
+      width: 100%;
+      text-align: center;
+      padding: 2rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .loader.active {
+      opacity: 1;
+    }
+
+    /* ------------------------------------------------------------------
+       Nav link underline animation
+    ------------------------------------------------------------------ */
+    .nav-link {
+      position: relative;
+      display: inline-block;
+    }
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 1px;
+      bottom: -2px;
+      left: 0;
+      background-color: var(--ink-black);
+      transition: width 0.25s ease;
+    }
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      width: 100%;
+    }
+
+    /* ------------------------------------------------------------------
+       Modal transitions
+    ------------------------------------------------------------------ */
+    #modal-overlay {
+      transition: opacity 0.25s ease;
+    }
+    #modal-content {
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col md:flex-row">
+  <!-- ================================================================
+       Sidebar
+  ================================================================= -->
+  <aside
+    class="w-full md:w-72 md:h-screen md:sticky md:top-0 border-b md:border-b-0 md:border-r border-black flex flex-col bg-[#FDFBF7] z-40 flex-shrink-0"
+  >
+    <div class="p-6 md:p-8 border-b border-black text-center md:text-left">
+      <h1
+        class="text-3xl md:text-4xl font-black uppercase tracking-tighter leading-none cursor-pointer hover:opacity-70 transition"
+        data-route="home"
+      >
+        The Daily<br />Aesthetic
+      </h1>
+      <p class="mt-3 text-xs italic font-medium text-gray-500">Vol. 104 &bull; Global Edition</p>
+    </div>
+
+    <nav class="p-6 md:p-8 flex-grow flex items-center md:items-start justify-center md:justify-start">
+      <ul
+        class="flex flex-row md:flex-col space-x-6 md:space-x-0 md:space-y-6 text-sm md:text-lg font-bold uppercase tracking-widest text-center md:text-left w-full"
+      >
+        <li>
+          <button class="nav-link w-full text-left active" data-route="home" data-target="home">Front Page</button>
+        </li>
+        <li>
+          <button class="nav-link w-full text-left" data-route="archive" data-target="archive">The Archive</button>
+        </li>
+        <li>
+          <button class="nav-link w-full text-left" data-route="shop" data-target="shop">The Shop</button>
+        </li>
+        <li>
+          <button class="nav-link w-full text-left" data-route="blog" data-target="blog">Columnists</button>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="hidden md:block p-8 border-t border-black">
+      <div id="current-date" class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2"></div>
+      <p class="text-[10px] text-gray-400 leading-tight">
+        Curating minimalism and design since 2024.<br />
+        &copy; The Daily Aesthetic.
+      </p>
+    </div>
+  </aside>
+
+  <!-- ================================================================
+       App Shell
+  ================================================================= -->
+  <div class="flex-grow flex flex-col min-h-screen">
+    <main id="app" class="flex-grow w-full"><!-- injected by JS --></main>
+
+    <footer class="md:hidden border-t-2 border-black py-8 bg-[#1a1a1a] text-[#FDFBF7] text-center">
+      <p class="text-xs uppercase tracking-widest">&copy; 2024 The Daily Aesthetic.</p>
+    </footer>
+  </div>
+
+  <!-- ================================================================
+       Modal
+  ================================================================= -->
+  <div
+    id="modal-overlay"
+    class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden opacity-0 flex items-center justify-center p-4"
+    data-modal-overlay
+  >
+    <div
+      id="modal-content"
+      class="bg-[#FDFBF7] w-full max-w-4xl max-h-[90vh] overflow-y-auto border border-black shadow-2xl transform scale-95 opacity-0 flex flex-col md:flex-row"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+      onclick="event.stopPropagation()"
+      data-modal-content
+    >
+      <div class="w-full md:w-1/2 h-64 md:h-auto relative">
+        <img id="modal-img" src="" class="absolute inset-0 w-full h-full object-cover grayscale" alt="" />
+      </div>
+
+      <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col relative">
+        <button
+          class="absolute top-4 right-4 hover:bg-black hover:text-white p-1 rounded-full transition"
+          aria-label="Close"
+          data-modal-close
+        >
+          <i data-lucide="x"></i>
+        </button>
+
+        <span id="modal-date" class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-2"></span>
+        <h2 id="modal-title" class="text-3xl md:text-4xl font-bold mb-6 leading-tight"></h2>
+
+        <div class="prose prose-sm font-serif text-gray-800 flex-grow overflow-y-auto pr-2">
+          <p id="modal-desc"></p>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-black/10 flex justify-between items-center">
+          <span id="modal-tags" class="text-xs uppercase font-bold text-gray-400"></span>
+          <button
+            id="modal-action-btn"
+            class="bg-black text-white px-6 py-2 text-xs uppercase tracking-widest hover:bg-gray-800 transition"
+          >
+            View Full Project
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================
+       App Logic (Module)
+       - Event delegation (fewer listeners)
+       - IntersectionObserver for infinite scroll
+       - Small perf wins: batching DOM writes, minimal icon refresh
+  ================================================================= -->
+  <script type="module">
+    /* ================================================================
+       DOM helpers
+    ================================================================= */
+    const $ = (sel, root = document) => root.querySelector(sel);
+    const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+
+    /* ================================================================
+       App State
+    ================================================================= */
+    const app = $("#app");
+    const currentDateEl = $("#current-date");
+
+    const state = {
+      view: "home",
+      archiveIndex: 0,
+      shopIndex: 0,
+      blogIndex: 0,
+      isLoading: false,
+      io: null,
+    };
+
+    /* ================================================================
+       Data (mock)
+    ================================================================= */
+    const TITLES_PROJECT = [
+      "The Concrete Silence",
+      "Form Follows Fiction",
+      "Urban Solitude",
+      "Minimalist Echoes",
+      "The White Space Theory",
+      "Brutalist Dreams",
+    ];
+
+    const TITLES_ARTICLE = [
+      "Why We Return to Analog",
+      "The Death of Color",
+      "Typography as Voice",
+      "Designing for Eternity",
+      "The Grid System Revisited",
+      "Less is More: A Lie?",
+    ];
+
+    const AUTHORS = ["Elena Fischer", "Marcus Thorne", "Sarah Jenkins", "David Okonma"];
+
+    const TITLES_PRODUCT = [
+      "Ceramic Vase No. 4",
+      "Linen Planner",
+      "Graphite Pen",
+      "Desk Organizer",
+      "Architectural Print",
+    ];
+
+    function generateProject(i) {
+      return {
+        id: i,
+        title: `${TITLES_PROJECT[i % TITLES_PROJECT.length]} ${Math.floor(Math.random() * 100)}`,
+        date: new Date(2023, i % 12, ((i * 3) % 28) + 1).toLocaleDateString("en-US", {
+          month: "long",
+          year: "numeric",
+        }),
+        image: `https://picsum.photos/seed/${i + 100}/800/1000`,
+        excerpt:
+          "A comprehensive exploration into the depths of modern architecture and the silence it brings to the chaotic urban environment.",
+        description:
+          "This project represents a paradigm shift in how we perceive empty space. By utilizing raw concrete textures and contrasting them with soft, natural light, the architect creates a sanctuary within the bustling city. The structure itself becomes a canvas for the shadows of passing time.<br><br>The interior follows a strict monochromatic palette, ensuring that the inhabitants become the primary source of color and life within the dwelling. It is not merely a house; it is a statement on restraint.",
+        tags: ["Architecture", "Interior", "Residential"],
+      };
+    }
+
+    function generateArticle(i) {
+      return {
+        id: i,
+        title: TITLES_ARTICLE[i % TITLES_ARTICLE.length],
+        author: AUTHORS[i % AUTHORS.length],
+        date: new Date(2024, 0, 15 - i * 7).toLocaleDateString("en-US", {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        }),
+        content: `
+          <p class="first-letter:text-5xl first-letter:font-bold first-letter:float-left first-letter:mr-3 first-letter:mt-[-4px]">
+            Lorel ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          </p>
+          <p class="mt-4">
+            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            The essence of design lies not in what is seen, but in what is felt.
+          </p>
+          <p class="mt-4">
+            In a world screaming for attention, silence is the only luxury left. We explore how modern brands are leveraging
+            "negative space" not just as a design tool, but as a philosophical stance against the noise of the information age.
+          </p>
+        `,
+        image: `https://picsum.photos/seed/${i + 500}/800/400`,
+      };
+    }
+
+    function generateProduct(i) {
+      return {
+        id: i,
+        title: `${TITLES_PRODUCT[i % TITLES_PRODUCT.length]} ${Math.floor(Math.random() * 50)}`,
+        price: (Math.random() * 80 + 20).toFixed(2),
+        date: "In Stock",
+        image: `https://picsum.photos/seed/shop${i}/800/800`,
+        description:
+          "Handcrafted with an emphasis on form and function. This piece integrates seamlessly into any minimalist environment. Made from sustainable materials and designed to last a lifetime.",
+        tags: ["Object", "Office", "Living"],
+      };
+    }
+
+    /* ================================================================
+       View templates
+    ================================================================= */
+    function renderHome() {
+      return `
+        <div class="flex flex-col items-center justify-center min-h-screen py-12 px-4 md:px-12 border-l-0 md:border-l border-black bg-white/50">
+          <div class="max-w-4xl w-full">
+
+            <div class="mb-8 flex justify-center items-center space-x-3">
+              <div class="h-[1px] bg-black w-12"></div>
+              <span class="text-xs font-bold uppercase tracking-widest text-red-700 flex items-center gap-2">
+                <span class="w-2 h-2 bg-red-700 rounded-full animate-pulse"></span>
+                Project of the Month
+              </span>
+              <div class="h-[1px] bg-black w-12"></div>
+            </div>
+
+            <h2 class="text-5xl md:text-8xl font-black mb-10 text-center leading-[0.9] hover:opacity-70 transition cursor-pointer" data-route="archive">
+              The Brutalist<br />Revival in Tokyo
+            </h2>
+
+            <div class="w-full aspect-[16/9] overflow-hidden mb-10 border border-black relative group cursor-pointer shadow-lg" data-route="archive">
+              <img
+                src="https://picsum.photos/seed/arch/1600/900"
+                class="w-full h-full object-cover img-newspaper group-hover:scale-105 transition duration-700"
+                alt="Hero Project"
+                loading="lazy"
+                decoding="async"
+              />
+              <div class="absolute bottom-0 right-0 bg-white border-t border-l border-black p-3">
+                <p class="font-serif italic text-xs text-gray-500">Fig 1.1 — Exterior Facade</p>
+              </div>
+            </div>
+
+            <div class="max-w-2xl mx-auto text-center">
+              <p class="text-xl md:text-2xl font-serif leading-relaxed mb-6">
+                <span class="font-bold uppercase text-sm mr-2 block mb-2">Tokyo, Japan</span>
+                In an era defined by glass towers and digital facades, one firm is returning to the raw honesty of concrete.
+                Our feature project this month explores the tactile nature of permanence in a transient city.
+              </p>
+
+              <div class="flex justify-center gap-8 py-6 border-t border-b border-black/10 my-8">
+                <div class="text-center">
+                  <span class="block text-[10px] font-bold uppercase text-gray-400">Architect</span>
+                  <span class="font-serif italic">Kengo Sato</span>
+                </div>
+                <div class="text-center">
+                  <span class="block text-[10px] font-bold uppercase text-gray-400">Year</span>
+                  <span class="font-serif italic">2024</span>
+                </div>
+                <div class="text-center">
+                  <span class="block text-[10px] font-bold uppercase text-gray-400">Area</span>
+                  <span class="font-serif italic">450 sqm</span>
+                </div>
+              </div>
+
+              <button data-route="archive" class="group text-sm font-bold uppercase tracking-widest hover:text-gray-600 transition">
+                Read Full Story
+                <span class="inline-block transition-transform group-hover:translate-x-1">&rarr;</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+      `;
+    }
+
+    function renderArchive() {
+      return `
+        <div class="w-full min-h-screen border-l-0 md:border-l border-black">
+          <div class="py-12 px-6 md:px-12 border-b border-black bg-[#FDFBF7]">
+            <h2 class="text-4xl md:text-6xl font-bold mb-4">The Archive</h2>
+            <p class="font-serif text-gray-600 italic max-w-xl">
+              A curated collection of past works, preserving the dialogue between space, form, and light.
+            </p>
+          </div>
+
+          <div id="archive-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0"></div>
+
+          <!-- sentinel used by IntersectionObserver -->
+          <div class="loader" data-loader>
+            <span class="inline-block w-2 h-2 bg-black rounded-full animate-bounce mr-1"></span>
+            <span class="inline-block w-2 h-2 bg-black rounded-full animate-bounce mr-1 delay-75"></span>
+            <span class="inline-block w-2 h-2 bg-black rounded-full animate-bounce delay-150"></span>
+          </div>
+          <div data-sentinel class="h-10"></div>
+        </div>
+      `;
+    }
+
+    function renderShop() {
+      return `
+        <div class="w-full min-h-screen border-l-0 md:border-l border-black">
+          <div class="py-12 px-6 md:px-12 border-b border-black bg-[#FDFBF7] flex flex-col md:flex-row justify-between md:items-end gap-6">
+            <div>
+              <h2 class="text-4xl md:text-6xl font-bold mb-4">The Shop</h2>
+              <p class="font-serif text-gray-600 italic max-w-xl">Curated objects of utility and beauty for the modern minimalist.</p>
+            </div>
+            <div class="flex items-center space-x-2 text-sm font-bold uppercase tracking-widest text-gray-400 pb-2">
+              <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+              <span>Cart (0)</span>
+            </div>
+          </div>
+
+          <div id="shop-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0"></div>
+
+          <div class="loader" data-loader>
+            <span class="inline-block w-2 h-2 bg-black rounded-full animate-bounce mr-1"></span>
+            <span class="inline-block w-2 h-2 bg-black rounded-full animate-bounce mr-1 delay-75"></span>
+            <span class="inline-block w-2 h-2 bg-black rounded-full animate-bounce delay-150"></span>
+          </div>
+          <div data-sentinel class="h-10"></div>
+        </div>
+      `;
+    }
+
+    function renderBlog() {
+      return `
+        <div class="w-full min-h-screen border-l-0 md:border-l border-black">
+          <div class="py-16 px-6 flex justify-center border-b border-black">
+            <div class="text-center">
+              <h2 class="text-4xl font-bold uppercase tracking-widest mb-2">The Columnist</h2>
+              <p class="font-serif italic text-gray-500">Weekly musings on design theory.</p>
+            </div>
+          </div>
+
+          <div id="blog-feed" class="max-w-3xl mx-auto divide-y-2 divide-black/10"></div>
+
+          <div class="loader" data-loader>
+            <span class="text-xs font-bold uppercase tracking-widest text-gray-500">Loading previous week...</span>
+          </div>
+          <div data-sentinel class="h-10"></div>
+        </div>
+      `;
+    }
+
+    /* ================================================================
+       UI helpers
+    ================================================================= */
+    function setLoading(isLoading) {
+      state.isLoading = isLoading;
+      const loader = $("[data-loader]");
+      if (!loader) return;
+      loader.classList.toggle("active", isLoading);
+    }
+
+    function updateNavActive(view) {
+      $$(".nav-link").forEach((el) => el.classList.toggle("active", el.dataset.target === view));
+    }
+
+    function refreshIcons() {
+      // lucide scans DOM; only do this after large view swaps or modal open.
+      lucide.createIcons();
+    }
+
+    function mountInfiniteScroll() {
+      // Kill previous observer when routing
+      if (state.io) {
+        state.io.disconnect();
+        state.io = null;
+      }
+
+      const sentinel = $("[data-sentinel]");
+      if (!sentinel) return;
+
+      state.io = new IntersectionObserver(
+        (entries) => {
+          if (!entries.some((e) => e.isIntersecting)) return;
+          if (state.isLoading) return;
+
+          if (state.view === "archive") loadArchiveItems();
+          if (state.view === "shop") loadShopItems();
+          if (state.view === "blog") loadBlogArticle();
+        },
+        { root: null, rootMargin: "800px 0px", threshold: 0.01 }
+      );
+
+      state.io.observe(sentinel);
+    }
+
+    /* ================================================================
+       Renderers (DOM batching)
+    ================================================================= */
+    function appendHTML(grid, html) {
+      const tpl = document.createElement("template");
+      tpl.innerHTML = html.trim();
+      grid.appendChild(tpl.content);
+    }
+
+    function loadArchiveItems(count = 6) {
+      const grid = $("#archive-grid");
+      if (!grid || state.isLoading) return;
+
+      setLoading(true);
+
+      // Simulate async fetch
+      setTimeout(() => {
+        let html = "";
+
+        for (let i = 0; i < count; i++) {
+          const data = generateProject(state.archiveIndex++);
+          // store item as JSON on the node via data-item (small + safe enough for mock)
+          // NOTE: For real data, prefer an ID map instead.
+          const payload = encodeURIComponent(JSON.stringify(data));
+
+          html += `
+            <div class="group border-b border-black md:border-r border-gray-300 p-8 flex flex-col cursor-pointer transition hover:bg-white" data-open-modal="1" data-item="${payload}">
+              <div class="overflow-hidden mb-6 border border-gray-200 relative aspect-[4/5] shadow-sm">
+                <img src="${data.image}" class="w-full h-full object-cover img-newspaper group-hover:scale-105 transition duration-500" alt="${escapeHtml(data.title)}" loading="lazy" decoding="async" />
+                <div class="absolute inset-0 bg-black/5 group-hover:bg-transparent transition"></div>
+              </div>
+              <div class="mt-auto">
+                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 block">${data.date}</span>
+                <h3 class="text-2xl font-bold leading-none mb-3 group-hover:underline underline-offset-4 decoration-1">${escapeHtml(data.title)}</h3>
+                <div class="flex flex-wrap gap-2">
+                  ${data.tags
+                    .map(
+                      (t) =>
+                        `<span class="text-[10px] border border-gray-300 px-1.5 py-0.5 text-gray-500 uppercase tracking-wide">${escapeHtml(
+                          t
+                        )}</span>`
+                    )
+                    .join("")}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        appendHTML(grid, html);
+        setLoading(false);
+      }, 650);
+    }
+
+    function loadShopItems(count = 6) {
+      const grid = $("#shop-grid");
+      if (!grid || state.isLoading) return;
+
+      setLoading(true);
+
+      setTimeout(() => {
+        let html = "";
+
+        for (let i = 0; i < count; i++) {
+          const data = generateProduct(state.shopIndex++);
+          const payload = encodeURIComponent(JSON.stringify(data));
+
+          html += `
+            <div class="group border-b border-black md:border-r border-gray-300 p-8 flex flex-col cursor-pointer transition hover:bg-white" data-open-modal="1" data-item="${payload}">
+              <div class="overflow-hidden mb-6 border border-gray-200 relative aspect-[1] shadow-sm">
+                <img src="${data.image}" class="w-full h-full object-cover img-newspaper group-hover:scale-105 transition duration-500" alt="${escapeHtml(data.title)}" loading="lazy" decoding="async" />
+                <div class="absolute top-2 right-2 bg-black text-white px-2 py-1 text-xs font-bold uppercase opacity-0 group-hover:opacity-100 transition">Quick Add</div>
+              </div>
+              <div class="mt-auto flex justify-between items-start">
+                <div>
+                  <h3 class="text-xl font-bold leading-none mb-2 group-hover:underline underline-offset-4 decoration-1">${escapeHtml(
+                    data.title
+                  )}</h3>
+                  <div class="flex flex-wrap gap-2">
+                    ${data.tags.map((t) => `<span class="text-[10px] text-gray-500 uppercase tracking-wide">${escapeHtml(t)}</span>`).join(" / ")}
+                  </div>
+                </div>
+                <span class="text-lg font-serif italic font-bold">$${data.price}</span>
+              </div>
+            </div>
+          `;
+        }
+
+        appendHTML(grid, html);
+        setLoading(false);
+      }, 650);
+    }
+
+    function loadBlogArticle() {
+      const feed = $("#blog-feed");
+      if (!feed || state.isLoading) return;
+
+      setLoading(true);
+
+      setTimeout(() => {
+        const data = generateArticle(state.blogIndex++);
+
+        const html = `
+          <article class="py-20 px-6 md:px-0">
+            <div class="text-center mb-10">
+              <span class="text-xs font-bold uppercase tracking-widest text-red-700 mb-2 block">Week of ${data.date}</span>
+              <h3 class="text-4xl md:text-6xl font-bold mb-4 font-serif leading-tight">${escapeHtml(data.title)}</h3>
+              <div class="flex justify-center items-center space-x-2 text-sm font-bold italic text-gray-500">
+                <span>By ${escapeHtml(data.author)}</span>
+              </div>
+            </div>
+
+            <div class="w-full aspect-[21/9] mb-12 border border-black overflow-hidden relative">
+              <img src="${data.image}" class="w-full h-full object-cover grayscale contrast-125" alt="${escapeHtml(data.title)}" loading="lazy" decoding="async" />
+            </div>
+
+            <div class="prose prose-lg prose-headings:font-serif font-serif mx-auto text-gray-800 leading-relaxed text-justify">
+              ${data.content}
+            </div>
+
+            <div class="mt-16 flex justify-center text-gray-300 tracking-[1em]">***</div>
+          </article>
+        `;
+
+        appendHTML(feed, html);
+        setLoading(false);
+      }, 650);
+    }
+
+    /* ================================================================
+       Modal
+       - focus management (minimal)
+       - esc-to-close
+    ================================================================= */
+    const modal = {
+      overlay: $("[data-modal-overlay]"),
+      content: $("[data-modal-content]"),
+      closeBtn: $("[data-modal-close]"),
+      lastFocus: null,
+    };
+
+    function openModal(data) {
+      const overlay = modal.overlay;
+      const content = modal.content;
+      const actionBtn = $("#modal-action-btn");
+
+      $("#modal-img").src = data.image;
+      $("#modal-title").innerText = data.title;
+      $("#modal-date").innerText = data.date;
+      $("#modal-desc").innerHTML = data.description;
+      $("#modal-tags").innerText = (data.tags || []).join(" / ");
+
+      if (data.price) {
+        actionBtn.innerText = `Add to Cart — $${data.price}`;
+        actionBtn.onclick = () => {
+          alert(`${data.title} added to cart!`);
+          closeModal();
+        };
+      } else {
+        actionBtn.innerText = "View Full Project";
+        actionBtn.onclick = () => alert("Project details view...");
+      }
+
+      modal.lastFocus = document.activeElement;
+
+      overlay.classList.remove("hidden");
+      requestAnimationFrame(() => {
+        overlay.classList.remove("opacity-0");
+        content.classList.remove("opacity-0", "scale-95");
+        content.classList.add("scale-100");
+      });
+
+      document.body.style.overflow = "hidden";
+      refreshIcons();
+
+      // focus close button for accessibility
+      modal.closeBtn?.focus?.();
+    }
+
+    function closeModal() {
+      const overlay = modal.overlay;
+      const content = modal.content;
+
+      overlay.classList.add("opacity-0");
+      content.classList.add("opacity-0", "scale-95");
+      content.classList.remove("scale-100");
+
+      setTimeout(() => {
+        overlay.classList.add("hidden");
+        document.body.style.overflow = "";
+        modal.lastFocus?.focus?.();
+      }, 250);
+    }
+
+    /* ================================================================
+       Router
+    ================================================================= */
+    function router(view) {
+      state.view = view;
+      updateNavActive(view);
+
+      if (view === "home") {
+        app.innerHTML = renderHome();
+        refreshIcons();
+        window.scrollTo(0, 0);
+        return;
+      }
+
+      if (view === "archive") {
+        app.innerHTML = renderArchive();
+        refreshIcons();
+        state.archiveIndex = 0;
+        loadArchiveItems(9);
+        mountInfiniteScroll();
+        window.scrollTo(0, 0);
+        return;
+      }
+
+      if (view === "shop") {
+        app.innerHTML = renderShop();
+        refreshIcons();
+        state.shopIndex = 0;
+        loadShopItems(9);
+        mountInfiniteScroll();
+        window.scrollTo(0, 0);
+        return;
+      }
+
+      if (view === "blog") {
+        app.innerHTML = renderBlog();
+        refreshIcons();
+        state.blogIndex = 0;
+        loadBlogArticle();
+        mountInfiniteScroll();
+        window.scrollTo(0, 0);
+        return;
+      }
+    }
+
+    /* ================================================================
+       Events (delegated)
+    ================================================================= */
+    document.addEventListener("click", (e) => {
+      // routing
+      const routeEl = e.target.closest("[data-route]");
+      if (routeEl) {
+        const view = routeEl.dataset.route;
+        if (view) router(view);
+        return;
+      }
+
+      // open modal from cards
+      const modalCard = e.target.closest("[data-open-modal]");
+      if (modalCard) {
+        const raw = modalCard.getAttribute("data-item");
+        if (!raw) return;
+        try {
+          const data = JSON.parse(decodeURIComponent(raw));
+          openModal(data);
+        } catch {
+          // ignore bad payload
+        }
+        return;
+      }
+
+      // close modal by overlay click
+      if (e.target === modal.overlay) {
+        closeModal();
+        return;
+      }
+
+      // close button
+      if (e.target.closest("[data-modal-close]")) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !modal.overlay.classList.contains("hidden")) {
+        closeModal();
+      }
+    });
+
+    /* ================================================================
+       Small safe HTML escape helper
+       (Used only for strings injected into HTML, not innerHTML blocks)
+    ================================================================= */
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    /* ================================================================
+       Boot
+    ================================================================= */
+    document.addEventListener("DOMContentLoaded", () => {
+      const dateOptions = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
+      currentDateEl.textContent = new Date().toLocaleDateString("en-US", dateOptions);
+
+      router("home");
+    });
+
+    // Expose router for debugging if needed
+    window.router = router;
+  </script>
+</body>
+</html>
