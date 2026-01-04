@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Daily Aesthetic</title>
+
+  <!-- Tailwind + Fonts + Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:wght@400;500;600;700;900&display=swap"
+    rel="stylesheet"
+  />
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body class="min-h-screen flex flex-col md:flex-row">
+  <!-- ================================================================
+       Sidebar
+  ================================================================= -->
+  <aside
+    class="w-full md:w-72 md:h-screen md:sticky md:top-0 border-b md:border-b-0 md:border-r border-black flex flex-col bg-[#FDFBF7] z-40 flex-shrink-0"
+  >
+    <div class="p-6 md:p-8 border-b border-black text-center md:text-left">
+      <h1
+        class="text-3xl md:text-4xl font-black uppercase tracking-tighter leading-none cursor-pointer hover:opacity-70 transition"
+        data-route="home"
+      >
+        The Daily<br />Aesthetic
+      </h1>
+      <p class="mt-3 text-xs italic font-medium text-gray-500">Vol. 104 &bull; Global Edition</p>
+    </div>
+
+    <nav class="p-6 md:p-8 flex-grow flex items-center md:items-start justify-center md:justify-start">
+      <ul
+        class="flex flex-row md:flex-col space-x-6 md:space-x-0 md:space-y-6 text-sm md:text-lg font-bold uppercase tracking-widest text-center md:text-left w-full"
+      >
+        <li>
+          <button class="nav-link w-full text-left active" data-route="home" data-target="home">Front Page</button>
+        </li>
+        <li>
+          <button class="nav-link w-full text-left" data-route="archive" data-target="archive">The Archive</button>
+        </li>
+        <li>
+          <button class="nav-link w-full text-left" data-route="shop" data-target="shop">The Shop</button>
+        </li>
+        <li>
+          <button class="nav-link w-full text-left" data-route="blog" data-target="blog">Columnists</button>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="hidden md:block p-8 border-t border-black">
+      <div id="current-date" class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2"></div>
+      <p class="text-[10px] text-gray-400 leading-tight">
+        Curating minimalism and design since 2024.<br />
+        &copy; The Daily Aesthetic.
+      </p>
+    </div>
+  </aside>
+
+  <!-- ================================================================
+       App Shell
+  ================================================================= -->
+  <div class="flex-grow flex flex-col min-h-screen">
+    <main id="app" class="flex-grow w-full"><!-- injected by JS --></main>
+
+    <footer class="md:hidden border-t-2 border-black py-8 bg-[#1a1a1a] text-[#FDFBF7] text-center">
+      <p class="text-xs uppercase tracking-widest">&copy; 2024 The Daily Aesthetic.</p>
+    </footer>
+  </div>
+
+  <!-- ================================================================
+       Modal
+  ================================================================= -->
+  <div
+    id="modal-overlay"
+    class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden opacity-0 flex items-center justify-center p-4"
+    data-modal-overlay
+  >
+    <div
+      id="modal-content"
+      class="bg-[#FDFBF7] w-full max-w-4xl max-h-[90vh] overflow-y-auto border border-black shadow-2xl transform scale-95 opacity-0 flex flex-col md:flex-row"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+      onclick="event.stopPropagation()"
+      data-modal-content
+    >
+      <div class="w-full md:w-1/2 h-64 md:h-auto relative">
+        <img id="modal-img" src="" class="absolute inset-0 w-full h-full object-cover grayscale" alt="" />
+      </div>
+
+      <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col relative">
+        <button
+          class="absolute top-4 right-4 hover:bg-black hover:text-white p-1 rounded-full transition"
+          aria-label="Close"
+          data-modal-close
+        >
+          <i data-lucide="x"></i>
+        </button>
+
+        <span id="modal-date" class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-2"></span>
+        <h2 id="modal-title" class="text-3xl md:text-4xl font-bold mb-6 leading-tight"></h2>
+
+        <div class="prose prose-sm font-serif text-gray-800 flex-grow overflow-y-auto pr-2">
+          <p id="modal-desc"></p>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-black/10 flex justify-between items-center">
+          <span id="modal-tags" class="text-xs uppercase font-bold text-gray-400"></span>
+          <button
+            id="modal-action-btn"
+            class="bg-black text-white px-6 py-2 text-xs uppercase tracking-widest hover:bg-gray-800 transition"
+          >
+            View Full Project
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application JavaScript -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
