@@ -3,7 +3,7 @@
  * Handles all HTTP requests to the backend API
  */
 
-const API_BASE_URL = 'http://localhost:3000/api';
+import API_BASE_URL from './config.js';
 
 const api = {
   /**
