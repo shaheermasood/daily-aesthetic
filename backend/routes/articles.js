@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db/connection');
+const { requireAuth } = require('../middleware/auth');
 
 // GET all articles with pagination
 router.get('/', async (req, res) => {
@@ -49,7 +50,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST create new article
-router.post('/', async (req, res) => {
+router.post('/', requireAuth, async (req, res) => {
   try {
     const { title, author, date, content, image_url } = req.body;
 
@@ -66,7 +67,7 @@ router.post('/', async (req, res) => {
 });
 
 // PUT update article
-router.put('/:id', async (req, res) => {
+router.put('/:id', requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
     const { title, author, date, content, image_url } = req.body;
@@ -88,7 +89,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // DELETE article
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
     const result = await pool.query('DELETE FROM articles WHERE id = $1 RETURNING *', [id]);
