@@ -5,6 +5,7 @@ require('dotenv').config();
 const projectsRouter = require('./routes/projects');
 const articlesRouter = require('./routes/articles');
 const productsRouter = require('./routes/products');
+const authRouter = require('./routes/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,6 +22,7 @@ app.use((req, res, next) => {
 });
 
 // API Routes
+app.use('/api/auth', authRouter);
 app.use('/api/projects', projectsRouter);
 app.use('/api/articles', articlesRouter);
 app.use('/api/products', productsRouter);
@@ -36,6 +38,7 @@ app.get('/', (req, res) => {
     message: 'The Daily Aesthetic API',
     version: '1.0.0',
     endpoints: {
+      auth: '/api/auth',
       projects: '/api/projects',
       articles: '/api/articles',
       products: '/api/products',
