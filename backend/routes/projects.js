@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db/connection');
+const { requireAuth } = require('../middleware/auth');
 
 // GET all projects with pagination
 router.get('/', async (req, res) => {
@@ -49,7 +50,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST create new project
-router.post('/', async (req, res) => {
+router.post('/', requireAuth, async (req, res) => {
   try {
     const { title, date, image_url, excerpt, description, tags } = req.body;
 
@@ -66,7 +67,7 @@ router.post('/', async (req, res) => {
 });
 
 // PUT update project
-router.put('/:id', async (req, res) => {
+router.put('/:id', requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
     const { title, date, image_url, excerpt, description, tags } = req.body;
@@ -88,7 +89,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // DELETE project
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
     const result = await pool.query('DELETE FROM projects WHERE id = $1 RETURNING *', [id]);
