@@ -24,15 +24,28 @@ daily-aesthetic/
 │   ├── db/
 │   │   ├── connection.js      # Database connection pool
 │   │   ├── schema.sql         # Database schema
-│   │   └── seed.sql           # Seed data
+│   │   ├── seed.sql           # Seed data
+│   │   ├── admin-schema.sql   # Admin user schema
+│   │   └── setup-admin.js     # Admin setup script
+│   ├── middleware/
+│   │   └── auth.js            # Authentication middleware
 │   ├── routes/
 │   │   ├── projects.js        # Projects API endpoints
 │   │   ├── articles.js        # Articles API endpoints
-│   │   └── products.js        # Products API endpoints
+│   │   ├── products.js        # Products API endpoints
+│   │   └── auth.js            # Authentication endpoints
 │   ├── server.js              # Express server
 │   ├── package.json           # Backend dependencies
 │   └── .env.example           # Environment variables template
 ├── frontend/
+│   ├── admin/
+│   │   ├── css/
+│   │   │   └── admin.css      # Admin panel styles
+│   │   ├── js/
+│   │   │   ├── admin.js       # Admin dashboard logic
+│   │   │   └── login.js       # Admin login logic
+│   │   ├── index.html         # Admin dashboard
+│   │   └── login.html         # Admin login page
 │   ├── css/
 │   │   └── styles.css         # Custom styles
 │   ├── js/
@@ -103,7 +116,21 @@ DB_PASSWORD=your_password_here
 DB_PORT=5432
 ```
 
-### 4. Start the Backend Server
+### 4. Set up Admin Panel
+
+```bash
+# From the backend directory
+npm run admin:setup
+```
+
+This will create the necessary admin tables and a default admin user:
+- **Username:** admin
+- **Password:** admin123
+- **Email:** admin@dailyaesthetic.com
+
+**Important:** Change the default password after first login!
+
+### 5. Start the Backend Server
 
 ```bash
 # From the backend directory
@@ -115,7 +142,7 @@ npm run dev
 
 The API server will start on `http://localhost:3000`
 
-### 5. Set up the Frontend
+### 6. Set up the Frontend
 
 The frontend is a static site that needs to be served. You can use any static file server:
 
@@ -142,6 +169,45 @@ http-server -p 8080
 
 The frontend will be available at `http://localhost:8080` (or the port you specified)
 
+## Admin Panel
+
+The admin panel provides a user-friendly interface for managing all content (projects, articles, and products).
+
+### Accessing the Admin Panel
+
+1. Make sure the backend server is running
+2. Serve the frontend (see installation steps above)
+3. Navigate to `http://localhost:8080/admin/login.html`
+4. Login with default credentials:
+   - Username: `admin`
+   - Password: `admin123`
+
+### Admin Features
+
+- **Authentication System** - Secure login with session management
+- **Projects Management** - Create, edit, and delete design projects
+- **Articles Management** - Manage blog articles and content
+- **Products Management** - Add and update product listings
+- **Responsive Design** - Works on desktop and mobile devices
+- **Real-time Updates** - Changes reflect immediately in the dashboard
+
+### Admin API Endpoints
+
+#### Authentication
+- `POST /api/auth/login` - Login and get session token
+- `POST /api/auth/logout` - Logout and invalidate session
+- `GET /api/auth/me` - Get current user info
+- `POST /api/auth/change-password` - Change user password
+- `POST /api/auth/cleanup-sessions` - Remove expired sessions
+
+### Security Notes
+
+- Sessions expire after 24 hours
+- Passwords are hashed using bcrypt
+- All admin routes (except login) require authentication
+- Change the default admin password immediately after setup
+- In production, use HTTPS and strong passwords
+
 ## API Endpoints
 
 ### Projects
@@ -167,12 +233,18 @@ The frontend will be available at `http://localhost:8080` (or the port you speci
 
 ## Features
 
+### Frontend
 - **Single-Page Application** - Client-side routing with smooth transitions
 - **Infinite Scroll** - Dynamically loads content as you scroll
 - **Modal System** - Rich detail views for projects and products
 - **Responsive Design** - Mobile-optimized layout
+- **Admin Panel** - Full content management system with authentication
+
+### Backend
 - **RESTful API** - Clean, organized backend structure
 - **PostgreSQL Database** - Reliable data persistence
+- **Authentication System** - Secure admin login with sessions
+- **CRUD Operations** - Complete content management endpoints
 
 ## Development
 
@@ -226,13 +298,16 @@ The backend uses the following environment variables (defined in `.env`):
 
 ## Future Enhancements
 
-- User authentication and authorization
-- Admin panel for content management
-- Image upload functionality
-- Search and filtering
+- ✅ ~~User authentication and authorization~~ (Completed)
+- ✅ ~~Admin panel for content management~~ (Completed)
+- Image upload functionality with cloud storage
+- Search and filtering for content
 - Shopping cart functionality
 - Newsletter subscription
 - Comment system
+- Multi-user admin with roles and permissions
+- Content versioning and drafts
+- Analytics dashboard
 
 ## License
 
