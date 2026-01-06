@@ -19,6 +19,8 @@ const state = {
   blogIndex: 0,
   isLoading: false,
   io: null,
+  scrollObserver: null,
+  prefersReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
 };
 
 /* ================================================================
@@ -175,6 +177,84 @@ function refreshIcons() {
   lucide.createIcons();
 }
 
+/* ================================================================
+   Modern Animation Utilities
+================================================================= */
+function setupScrollAnimations() {
+  if (state.prefersReducedMotion) return;
+
+  // Disconnect existing observer
+  if (state.scrollObserver) {
+    state.scrollObserver.disconnect();
+  }
+
+  // Create intersection observer for scroll-triggered animations
+  state.scrollObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          // Optionally unobserve after revealing for performance
+          // state.scrollObserver.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      root: null,
+      rootMargin: '0px 0px -100px 0px',
+      threshold: 0.1,
+    }
+  );
+
+  // Observe all reveal-on-scroll elements
+  $$('.reveal-on-scroll').forEach((el) => {
+    state.scrollObserver.observe(el);
+  });
+}
+
+function addStaggerAnimation(container, selector = '.stagger-item') {
+  if (state.prefersReducedMotion) return;
+
+  const items = container.querySelectorAll(selector);
+  items.forEach((item, index) => {
+    item.style.animationDelay = `${index * 50}ms`;
+  });
+}
+
+function smoothScrollTo(top) {
+  if (state.prefersReducedMotion) {
+    window.scrollTo(0, top);
+  } else {
+    window.scrollTo({
+      top,
+      behavior: 'smooth'
+    });
+  }
+}
+
+// Subtle parallax effect on scroll
+let ticking = false;
+function handleParallaxScroll() {
+  if (state.prefersReducedMotion) return;
+
+  const scrolled = window.pageYOffset;
+  const parallaxElements = $$('.parallax');
+
+  parallaxElements.forEach((el) => {
+    const speed = el.dataset.speed || 0.5;
+    el.style.transform = `translateY(${scrolled * speed}px)`;
+  });
+
+  ticking = false;
+}
+
+window.addEventListener('scroll', () => {
+  if (!ticking && !state.prefersReducedMotion) {
+    window.requestAnimationFrame(handleParallaxScroll);
+    ticking = true;
+  }
+}, { passive: true });
+
 function mountInfiniteScroll() {
   if (state.io) {
     state.io.disconnect();
@@ -245,6 +325,9 @@ async function loadArchiveItems(count = 6) {
     appendHTML(grid, html);
     state.archiveIndex += projects.length;
     setLoading(false);
+
+    // Setup scroll animations for newly added items
+    setupScrollAnimations();
   } catch (error) {
     console.error('Failed to load archive items:', error);
     setLoading(false);
@@ -291,6 +374,9 @@ async function loadShopItems(count = 6) {
     appendHTML(grid, html);
     state.shopIndex += products.length;
     setLoading(false);
+
+    // Setup scroll animations for newly added items
+    setupScrollAnimations();
   } catch (error) {
     console.error('Failed to load shop items:', error);
     setLoading(false);
@@ -339,6 +425,9 @@ async function loadBlogArticle() {
     appendHTML(feed, html);
     state.blogIndex += 1;
     setLoading(false);
+
+    // Setup scroll animations for newly added article
+    setupScrollAnimations();
   } catch (error) {
     console.error('Failed to load blog article:', error);
     setLoading(false);
@@ -414,10 +503,13 @@ function router(view) {
   state.view = view;
   updateNavActive(view);
 
+  // Smooth scroll to top
+  smoothScrollTo(0);
+
   if (view === "home") {
     app.innerHTML = renderHome();
     refreshIcons();
-    window.scrollTo(0, 0);
+    setupScrollAnimations();
     return;
   }
 
@@ -427,7 +519,7 @@ function router(view) {
     state.archiveIndex = 0;
     loadArchiveItems(9);
     mountInfiniteScroll();
-    window.scrollTo(0, 0);
+    setupScrollAnimations();
     return;
   }
 
@@ -437,7 +529,7 @@ function router(view) {
     state.shopIndex = 0;
     loadShopItems(9);
     mountInfiniteScroll();
-    window.scrollTo(0, 0);
+    setupScrollAnimations();
     return;
   }
 
@@ -447,7 +539,7 @@ function router(view) {
     state.blogIndex = 0;
     loadBlogArticle();
     mountInfiniteScroll();
-    window.scrollTo(0, 0);
+    setupScrollAnimations();
     return;
   }
 }

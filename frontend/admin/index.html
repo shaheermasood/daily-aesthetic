@@ -20,24 +20,24 @@
 
 <body class="min-h-screen bg-gray-50">
   <!-- Header -->
-  <header class="bg-white border-b-2 border-black sticky top-0 z-50">
+  <header class="bg-white border-b-2 border-black sticky top-0 z-50 backdrop-blur-sm bg-white/90">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center space-x-4">
-          <h1 class="text-2xl font-black uppercase tracking-tighter">
+          <h1 class="text-2xl font-black uppercase tracking-tighter transition-all duration-300 hover:tracking-tight">
             The Daily Aesthetic
           </h1>
           <span class="text-xs text-gray-500 uppercase tracking-widest">Admin</span>
         </div>
 
         <div class="flex items-center space-x-4">
-          <div class="text-right mr-4">
+          <div class="text-right mr-4 hidden sm:block">
             <p class="text-sm font-medium" id="admin-name">Admin User</p>
             <p class="text-xs text-gray-500" id="admin-email">admin@example.com</p>
           </div>
           <button
             id="logout-btn"
-            class="px-4 py-2 text-sm bg-black text-white hover:bg-gray-800 transition uppercase tracking-wider"
+            class="px-4 py-2 text-sm bg-black text-white hover:bg-gray-800 transition-all uppercase tracking-wider"
           >
             Logout
           </button>
@@ -156,7 +156,7 @@
         <button
           type="button"
           id="cancel-modal-btn"
-          class="px-6 py-2 border border-gray-300 text-gray-700 hover:bg-gray-100 transition uppercase tracking-wider text-sm"
+          class="px-6 py-2 border border-gray-300 text-gray-700 hover:bg-gray-100 transition-all uppercase tracking-wider text-sm"
         >
           Cancel
         </button>
@@ -164,7 +164,7 @@
           type="submit"
           form="edit-form"
           id="save-modal-btn"
-          class="px-6 py-2 bg-black text-white hover:bg-gray-800 transition uppercase tracking-wider text-sm"
+          class="px-6 py-2 bg-black text-white hover:bg-gray-800 transition-all uppercase tracking-wider text-sm"
         >
           Save Changes
         </button>
@@ -189,13 +189,13 @@
         <div class="flex justify-end space-x-4">
           <button
             id="cancel-delete-btn"
-            class="px-6 py-2 border border-gray-300 text-gray-700 hover:bg-gray-100 transition uppercase tracking-wider text-sm"
+            class="px-6 py-2 border border-gray-300 text-gray-700 hover:bg-gray-100 transition-all uppercase tracking-wider text-sm"
           >
             Cancel
           </button>
           <button
             id="confirm-delete-btn"
-            class="px-6 py-2 bg-red-600 text-white hover:bg-red-700 transition uppercase tracking-wider text-sm"
+            class="px-6 py-2 bg-red-600 text-white hover:bg-red-700 transition-all uppercase tracking-wider text-sm hover:shadow-lg"
           >
             Delete
           </button>

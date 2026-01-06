@@ -24,11 +24,11 @@
        Sidebar
   ================================================================= -->
   <aside
-    class="w-full md:w-72 md:h-screen md:sticky md:top-0 border-b md:border-b-0 md:border-r border-black flex flex-col bg-[#FDFBF7] z-40 flex-shrink-0"
+    class="w-full md:w-72 md:h-screen md:sticky md:top-0 border-b md:border-b-0 md:border-r border-black flex flex-col bg-[#FDFBF7] z-40 flex-shrink-0 will-change-transform"
   >
     <div class="p-6 md:p-8 border-b border-black text-center md:text-left">
       <h1
-        class="text-3xl md:text-4xl font-black uppercase tracking-tighter leading-none cursor-pointer hover:opacity-70 transition"
+        class="text-3xl md:text-4xl font-black uppercase tracking-tighter leading-none cursor-pointer transition-all duration-300 hover:tracking-tight hover:opacity-70"
         data-route="home"
       >
         The Daily<br />Aesthetic
@@ -80,25 +80,25 @@
   ================================================================= -->
   <div
     id="modal-overlay"
-    class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden opacity-0 flex items-center justify-center p-4"
+    class="fixed inset-0 bg-black/40 z-50 hidden opacity-0 flex items-center justify-center p-4 will-change-opacity"
     data-modal-overlay
   >
     <div
       id="modal-content"
-      class="bg-[#FDFBF7] w-full max-w-4xl max-h-[90vh] overflow-y-auto border border-black shadow-2xl transform scale-95 opacity-0 flex flex-col md:flex-row"
+      class="bg-[#FDFBF7] w-full max-w-4xl max-h-[90vh] overflow-y-auto border-2 border-black shadow-2xl transform scale-95 opacity-0 flex flex-col md:flex-row will-change-transform gpu-accelerated"
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
       onclick="event.stopPropagation()"
       data-modal-content
     >
-      <div class="w-full md:w-1/2 h-64 md:h-auto relative">
-        <img id="modal-img" src="" class="absolute inset-0 w-full h-full object-cover grayscale" alt="" />
+      <div class="w-full md:w-1/2 h-64 md:h-auto relative overflow-hidden">
+        <img id="modal-img" src="" class="absolute inset-0 w-full h-full object-cover grayscale transition-transform duration-700 hover:scale-110" alt="" />
       </div>
 
       <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col relative">
         <button
-          class="absolute top-4 right-4 hover:bg-black hover:text-white p-1 rounded-full transition"
+          class="absolute top-4 right-4 hover:bg-black hover:text-white p-2 rounded-full transition-all duration-200"
           aria-label="Close"
           data-modal-close
         >
@@ -116,7 +116,7 @@
           <span id="modal-tags" class="text-xs uppercase font-bold text-gray-400"></span>
           <button
             id="modal-action-btn"
-            class="bg-black text-white px-6 py-2 text-xs uppercase tracking-widest hover:bg-gray-800 transition"
+            class="bg-black text-white px-6 py-3 text-xs uppercase tracking-widest hover:bg-gray-800 transition-all duration-300 hover:tracking-wide hover:px-8 hover:shadow-lg"
           >
             View Full Project
           </button>
