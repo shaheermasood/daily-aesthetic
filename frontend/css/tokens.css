@@ -1,0 +1,84 @@
+/* ------------------------------------------------------------------
+   Design Tokens & Custom Properties - Apple/Yeezy Inspired
+   Shared across all application styles
+------------------------------------------------------------------ */
+:root {
+  /* Neutral Earth Tone Palette - Yeezy Inspired */
+  --bg-primary: #F5F3F0;          /* Warm off-white */
+  --bg-secondary: #E8E5E0;        /* Light warm gray */
+  --bg-card: #FFFFFF;             /* Pure white cards */
+  --bg-elevated: #FAFAF8;         /* Subtle elevation */
+
+  /* Text Colors - Minimalist Hierarchy */
+  --text-primary: #1C1B1A;        /* Almost black, warm undertone */
+  --text-secondary: #6B6866;      /* Warm medium gray */
+  --text-tertiary: #A19D98;       /* Light warm gray */
+  --text-inverse: #FFFFFF;
+
+  /* Accent Colors - Muted & Refined */
+  --accent-primary: #2C2C2C;      /* Charcoal for premium feel */
+  --accent-sand: #D4C5B9;         /* Warm sand/taupe */
+  --accent-warm: #C9B8A8;         /* Warm beige */
+  --accent-subtle: #E6DDD5;       /* Very light warm tone */
+
+  /* Border Colors - Subtle */
+  --border-subtle: rgba(0, 0, 0, 0.06);
+  --border-light: rgba(0, 0, 0, 0.08);
+  --border-medium: rgba(0, 0, 0, 0.12);
+
+  /* Overlay */
+  --overlay-bg: rgba(28, 27, 26, 0.4);
+  --overlay-glass: rgba(255, 255, 255, 0.7);
+
+  /* Spacing - Generous Apple-style whitespace */
+  --spacing-xs: 0.375rem;    /* 6px */
+  --spacing-sm: 0.75rem;     /* 12px */
+  --spacing-md: 1.5rem;      /* 24px */
+  --spacing-lg: 3rem;        /* 48px */
+  --spacing-xl: 6rem;        /* 96px */
+  --spacing-2xl: 9rem;       /* 144px */
+
+  /* Typography Scale */
+  --text-xs: 0.75rem;        /* 12px */
+  --text-sm: 0.875rem;       /* 14px */
+  --text-base: 1rem;         /* 16px */
+  --text-lg: 1.125rem;       /* 18px */
+  --text-xl: 1.5rem;         /* 24px */
+  --text-2xl: 2rem;          /* 32px */
+  --text-3xl: 3rem;          /* 48px */
+  --text-4xl: 4rem;          /* 64px */
+
+  /* Transitions - Smooth Apple-style */
+  --transition-fast: 200ms;
+  --transition-base: 300ms;
+  --transition-slow: 500ms;
+  --transition-slower: 700ms;
+
+  /* Easing curves - Apple-inspired */
+  --ease-out-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* Shadows - Soft & Elevated */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  --shadow-sm: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px 0 rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 24px 0 rgba(0, 0, 0, 0.08);
+  --shadow-xl: 0 16px 48px 0 rgba(0, 0, 0, 0.10);
+  --shadow-2xl: 0 24px 64px 0 rgba(0, 0, 0, 0.12);
+
+  /* Border Radius - Soft & Modern */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+}
+
+/* ------------------------------------------------------------------
+   Base & Modern Scroll Behavior
+------------------------------------------------------------------ */
+* {
+  scroll-behavior: smooth;
+}

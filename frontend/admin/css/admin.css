@@ -1,50 +1,9 @@
-/* Admin Panel Custom Styles - Modern Design */
+/* ------------------------------------------------------------------
+   Admin Panel Custom Styles - Modern Design
+------------------------------------------------------------------ */
 
-:root {
-  /* Neutral Earth Tone Palette */
-  --bg-primary: #F5F3F0;
-  --bg-secondary: #E8E5E0;
-  --bg-card: #FFFFFF;
-  --bg-elevated: #FAFAF8;
-
-  --text-primary: #1C1B1A;
-  --text-secondary: #6B6866;
-  --text-tertiary: #A19D98;
-  --text-inverse: #FFFFFF;
-
-  --accent-primary: #2C2C2C;
-  --accent-sand: #D4C5B9;
-  --accent-warm: #C9B8A8;
-  --accent-subtle: #E6DDD5;
-
-  --border-subtle: rgba(0, 0, 0, 0.06);
-  --border-light: rgba(0, 0, 0, 0.08);
-  --border-medium: rgba(0, 0, 0, 0.12);
-
-  /* Transitions */
-  --transition-fast: 200ms;
-  --transition-base: 300ms;
-  --transition-slow: 500ms;
-  --ease-out-smooth: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-
-  /* Shadows */
-  --shadow-sm: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 4px 12px 0 rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 8px 24px 0 rgba(0, 0, 0, 0.08);
-  --shadow-xl: 0 16px 48px 0 rgba(0, 0, 0, 0.10);
-
-  /* Border Radius */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
-}
-
-* {
-  scroll-behavior: smooth;
-}
+/* Import Shared Design Tokens */
+@import url('../css/tokens.css');
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI',
