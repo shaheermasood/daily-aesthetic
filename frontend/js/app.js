@@ -33,23 +33,23 @@ const state = {
 ================================================================= */
 function renderHome() {
   return `
-    <div class="flex flex-col items-center justify-center min-h-screen py-12 px-4 md:px-12 border-l-0 md:border-l border-black bg-white/50">
-      <div class="max-w-4xl w-full">
+    <div class="flex flex-col items-center justify-center min-h-screen py-24 px-6 md:px-16">
+      <div class="max-w-5xl w-full">
 
-        <div class="mb-8 flex justify-center items-center space-x-3">
-          <div class="h-[1px] bg-black w-12"></div>
-          <span class="text-xs font-bold uppercase tracking-widest text-red-700 flex items-center gap-2">
-            <span class="w-2 h-2 bg-red-700 rounded-full animate-pulse"></span>
-            Project of the Month
+        <div class="mb-12 flex justify-center items-center space-x-4">
+          <div class="h-[1px] w-16" style="background-color: var(--border-medium);"></div>
+          <span class="text-xs font-semibold tracking-wide flex items-center gap-2" style="color: var(--text-secondary);">
+            <span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background-color: var(--accent-sand);"></span>
+            PROJECT OF THE MONTH
           </span>
-          <div class="h-[1px] bg-black w-12"></div>
+          <div class="h-[1px] w-16" style="background-color: var(--border-medium);"></div>
         </div>
 
-        <h2 class="text-5xl md:text-8xl font-black mb-10 text-center leading-[0.9] hover:opacity-70 transition cursor-pointer" data-route="archive">
+        <h2 class="text-5xl md:text-8xl font-bold mb-16 text-center leading-[0.95] hover:opacity-70 transition-opacity cursor-pointer" data-route="archive" style="color: var(--text-primary); letter-spacing: -0.04em;">
           The Brutalist<br />Revival in Tokyo
         </h2>
 
-        <div class="w-full aspect-[16/9] overflow-hidden mb-10 border border-black relative group cursor-pointer shadow-lg" data-route="archive">
+        <div class="w-full aspect-[16/9] overflow-hidden mb-14 relative group cursor-pointer" data-route="archive" style="border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);">
           <img
             src="https://picsum.photos/seed/arch/1600/900"
             class="w-full h-full object-cover img-newspaper group-hover:scale-105 transition duration-700"
@@ -57,36 +57,36 @@ function renderHome() {
             loading="lazy"
             decoding="async"
           />
-          <div class="absolute bottom-0 right-0 bg-white border-t border-l border-black p-3">
-            <p class="font-serif italic text-xs text-gray-500">Fig 1.1 — Exterior Facade</p>
+          <div class="absolute bottom-6 right-6 px-4 py-2" style="background-color: var(--overlay-glass); backdrop-filter: blur(12px); border-radius: var(--radius-md);">
+            <p class="text-xs font-medium" style="color: var(--text-secondary);">Fig 1.1 — Exterior Facade</p>
           </div>
         </div>
 
-        <div class="max-w-2xl mx-auto text-center">
-          <p class="text-xl md:text-2xl font-serif leading-relaxed mb-6">
-            <span class="font-bold uppercase text-sm mr-2 block mb-2">Tokyo, Japan</span>
+        <div class="max-w-3xl mx-auto text-center">
+          <p class="text-lg md:text-xl leading-relaxed mb-8" style="color: var(--text-secondary); line-height: 1.8;">
+            <span class="font-semibold text-sm tracking-wide mr-2 block mb-4" style="color: var(--text-tertiary);">TOKYO, JAPAN</span>
             In an era defined by glass towers and digital facades, one firm is returning to the raw honesty of concrete.
             Our feature project this month explores the tactile nature of permanence in a transient city.
           </p>
 
-          <div class="flex justify-center gap-8 py-6 border-t border-b border-black/10 my-8">
+          <div class="flex justify-center gap-12 py-8 my-12" style="border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);">
             <div class="text-center">
-              <span class="block text-[10px] font-bold uppercase text-gray-400">Architect</span>
-              <span class="font-serif italic">Kengo Sato</span>
+              <span class="block text-xs font-semibold tracking-wide mb-2" style="color: var(--text-tertiary);">ARCHITECT</span>
+              <span class="font-medium" style="color: var(--text-secondary);">Kengo Sato</span>
             </div>
             <div class="text-center">
-              <span class="block text-[10px] font-bold uppercase text-gray-400">Year</span>
-              <span class="font-serif italic">2024</span>
+              <span class="block text-xs font-semibold tracking-wide mb-2" style="color: var(--text-tertiary);">YEAR</span>
+              <span class="font-medium" style="color: var(--text-secondary);">2024</span>
             </div>
             <div class="text-center">
-              <span class="block text-[10px] font-bold uppercase text-gray-400">Area</span>
-              <span class="font-serif italic">450 sqm</span>
+              <span class="block text-xs font-semibold tracking-wide mb-2" style="color: var(--text-tertiary);">AREA</span>
+              <span class="font-medium" style="color: var(--text-secondary);">450 sqm</span>
             </div>
           </div>
 
-          <button data-route="archive" class="group text-sm font-bold uppercase tracking-widest hover:text-gray-600 transition">
-            Read Full Story
-            <span class="inline-block transition-transform group-hover:translate-x-1">&rarr;</span>
+          <button data-route="archive" class="group text-sm font-medium tracking-wide hover:opacity-70 transition-opacity" style="color: var(--text-primary);">
+            READ FULL STORY
+            <span class="inline-block transition-transform group-hover:translate-x-1 ml-2">&rarr;</span>
           </button>
         </div>
 
@@ -97,44 +97,47 @@ function renderHome() {
 
 function renderArchive() {
   return `
-    <div class="w-full min-h-screen border-l-0 md:border-l border-black">
-      <div class="py-12 px-6 md:px-12 border-b border-black bg-[#FDFBF7]">
-        <h2 class="text-4xl md:text-6xl font-bold mb-4">The Archive</h2>
-        <p class="font-serif text-gray-600 italic max-w-xl mb-6">
+    <div class="w-full min-h-screen">
+      <div class="py-16 px-8 md:px-16" style="background-color: var(--bg-card); border-bottom: 1px solid var(--border-subtle);">
+        <h2 class="text-4xl md:text-6xl font-semibold mb-6" style="color: var(--text-primary); letter-spacing: -0.03em;">The Archive</h2>
+        <p class="max-w-xl mb-10 leading-relaxed" style="color: var(--text-secondary);">
           A curated collection of past works, preserving the dialogue between space, form, and light.
         </p>
-        <div class="flex flex-col md:flex-row gap-4 max-w-2xl">
+        <div class="flex flex-col md:flex-row gap-4 max-w-3xl">
           <div class="flex-grow relative">
             <input
               type="text"
               id="archive-search"
               placeholder="Search projects..."
-              class="w-full px-4 py-3 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black/10"
+              class="w-full px-5 py-4 text-sm transition-all"
+              style="background-color: var(--bg-elevated); border: 1px solid var(--border-light); border-radius: var(--radius-md); color: var(--text-primary);"
             />
-            <i data-lucide="search" class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <i data-lucide="search" class="w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2" style="color: var(--text-tertiary);"></i>
           </div>
           <input
             type="text"
             id="archive-tag"
             placeholder="Filter by tag..."
-            class="px-4 py-3 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black/10 md:w-48"
+            class="px-5 py-4 text-sm md:w-48 transition-all"
+            style="background-color: var(--bg-elevated); border: 1px solid var(--border-light); border-radius: var(--radius-md); color: var(--text-primary);"
           />
           <button
             id="archive-clear"
-            class="px-6 py-3 bg-black text-white text-xs uppercase tracking-widest hover:bg-gray-800 transition"
+            class="px-8 py-4 text-xs font-medium tracking-wide transition-all"
+            style="background-color: var(--accent-primary); color: var(--text-inverse); border-radius: var(--radius-md);"
           >
-            Clear
+            CLEAR
           </button>
         </div>
       </div>
 
-      <div id="archive-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0"></div>
+      <div id="archive-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-8 md:p-16"></div>
 
       <!-- sentinel used by IntersectionObserver -->
       <div class="loader" data-loader>
-        <span class="inline-block w-2 h-2 bg-black rounded-full animate-bounce mr-1"></span>
-        <span class="inline-block w-2 h-2 bg-black rounded-full animate-bounce mr-1 delay-75"></span>
-        <span class="inline-block w-2 h-2 bg-black rounded-full animate-bounce delay-150"></span>
+        <span class="inline-block w-2 h-2 rounded-full animate-bounce mr-1" style="background-color: var(--text-tertiary);"></span>
+        <span class="inline-block w-2 h-2 rounded-full animate-bounce mr-1 delay-75" style="background-color: var(--text-tertiary);"></span>
+        <span class="inline-block w-2 h-2 rounded-full animate-bounce delay-150" style="background-color: var(--text-tertiary);"></span>
       </div>
       <div data-sentinel class="h-10"></div>
     </div>
@@ -143,16 +146,16 @@ function renderArchive() {
 
 function renderShop() {
   return `
-    <div class="w-full min-h-screen border-l-0 md:border-l border-black">
-      <div class="py-12 px-6 md:px-12 border-b border-black bg-[#FDFBF7]">
-        <div class="flex flex-col md:flex-row justify-between md:items-end gap-6 mb-6">
+    <div class="w-full min-h-screen">
+      <div class="py-16 px-8 md:px-16" style="background-color: var(--bg-card); border-bottom: 1px solid var(--border-subtle);">
+        <div class="flex flex-col md:flex-row justify-between md:items-end gap-6 mb-10">
           <div>
-            <h2 class="text-4xl md:text-6xl font-bold mb-4">The Shop</h2>
-            <p class="font-serif text-gray-600 italic max-w-xl">Curated objects of utility and beauty for the modern minimalist.</p>
+            <h2 class="text-4xl md:text-6xl font-semibold mb-6" style="color: var(--text-primary); letter-spacing: -0.03em;">The Shop</h2>
+            <p class="max-w-xl leading-relaxed" style="color: var(--text-secondary);">Curated objects of utility and beauty for the modern minimalist.</p>
           </div>
-          <div class="flex items-center space-x-2 text-sm font-bold uppercase tracking-widest text-gray-400 pb-2">
+          <div class="flex items-center space-x-2 text-sm font-medium tracking-wide pb-2" style="color: var(--text-tertiary);">
             <i data-lucide="shopping-bag" class="w-4 h-4"></i>
-            <span>Cart (0)</span>
+            <span>CART (0)</span>
           </div>
         </div>
         <div class="flex flex-col md:flex-row gap-4 max-w-4xl">
@@ -161,43 +164,48 @@ function renderShop() {
               type="text"
               id="shop-search"
               placeholder="Search products..."
-              class="w-full px-4 py-3 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black/10"
+              class="w-full px-5 py-4 text-sm transition-all"
+              style="background-color: var(--bg-elevated); border: 1px solid var(--border-light); border-radius: var(--radius-md); color: var(--text-primary);"
             />
-            <i data-lucide="search" class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <i data-lucide="search" class="w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2" style="color: var(--text-tertiary);"></i>
           </div>
           <input
             type="text"
             id="shop-tag"
             placeholder="Filter by tag..."
-            class="px-4 py-3 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black/10 md:w-40"
+            class="px-5 py-4 text-sm md:w-40 transition-all"
+            style="background-color: var(--bg-elevated); border: 1px solid var(--border-light); border-radius: var(--radius-md); color: var(--text-primary);"
           />
           <input
             type="number"
             id="shop-min-price"
             placeholder="Min $"
-            class="px-4 py-3 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black/10 md:w-28"
+            class="px-5 py-4 text-sm md:w-28 transition-all"
+            style="background-color: var(--bg-elevated); border: 1px solid var(--border-light); border-radius: var(--radius-md); color: var(--text-primary);"
           />
           <input
             type="number"
             id="shop-max-price"
             placeholder="Max $"
-            class="px-4 py-3 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black/10 md:w-28"
+            class="px-5 py-4 text-sm md:w-28 transition-all"
+            style="background-color: var(--bg-elevated); border: 1px solid var(--border-light); border-radius: var(--radius-md); color: var(--text-primary);"
           />
           <button
             id="shop-clear"
-            class="px-6 py-3 bg-black text-white text-xs uppercase tracking-widest hover:bg-gray-800 transition"
+            class="px-8 py-4 text-xs font-medium tracking-wide transition-all"
+            style="background-color: var(--accent-primary); color: var(--text-inverse); border-radius: var(--radius-md);"
           >
-            Clear
+            CLEAR
           </button>
         </div>
       </div>
 
-      <div id="shop-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0"></div>
+      <div id="shop-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-8 md:p-16"></div>
 
       <div class="loader" data-loader>
-        <span class="inline-block w-2 h-2 bg-black rounded-full animate-bounce mr-1"></span>
-        <span class="inline-block w-2 h-2 bg-black rounded-full animate-bounce mr-1 delay-75"></span>
-        <span class="inline-block w-2 h-2 bg-black rounded-full animate-bounce delay-150"></span>
+        <span class="inline-block w-2 h-2 rounded-full animate-bounce mr-1" style="background-color: var(--text-tertiary);"></span>
+        <span class="inline-block w-2 h-2 rounded-full animate-bounce mr-1 delay-75" style="background-color: var(--text-tertiary);"></span>
+        <span class="inline-block w-2 h-2 rounded-full animate-bounce delay-150" style="background-color: var(--text-tertiary);"></span>
       </div>
       <div data-sentinel class="h-10"></div>
     </div>
@@ -206,41 +214,44 @@ function renderShop() {
 
 function renderBlog() {
   return `
-    <div class="w-full min-h-screen border-l-0 md:border-l border-black">
-      <div class="py-16 px-6 border-b border-black">
+    <div class="w-full min-h-screen">
+      <div class="py-20 px-8" style="background-color: var(--bg-card); border-bottom: 1px solid var(--border-subtle);">
         <div class="text-center max-w-3xl mx-auto">
-          <h2 class="text-4xl font-bold uppercase tracking-widest mb-2">The Columnist</h2>
-          <p class="font-serif italic text-gray-500 mb-6">Weekly musings on design theory.</p>
+          <h2 class="text-4xl font-semibold tracking-wide mb-4" style="color: var(--text-primary); letter-spacing: -0.02em;">The Columnist</h2>
+          <p class="mb-10 leading-relaxed" style="color: var(--text-secondary);">Weekly musings on design theory.</p>
           <div class="flex flex-col md:flex-row gap-4 justify-center">
             <div class="flex-grow relative max-w-md">
               <input
                 type="text"
                 id="blog-search"
                 placeholder="Search articles..."
-                class="w-full px-4 py-3 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black/10"
+                class="w-full px-5 py-4 text-sm transition-all"
+                style="background-color: var(--bg-elevated); border: 1px solid var(--border-light); border-radius: var(--radius-md); color: var(--text-primary);"
               />
-              <i data-lucide="search" class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+              <i data-lucide="search" class="w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2" style="color: var(--text-tertiary);"></i>
             </div>
             <input
               type="text"
               id="blog-author"
               placeholder="Filter by author..."
-              class="px-4 py-3 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black/10 md:w-48"
+              class="px-5 py-4 text-sm md:w-48 transition-all"
+              style="background-color: var(--bg-elevated); border: 1px solid var(--border-light); border-radius: var(--radius-md); color: var(--text-primary);"
             />
             <button
               id="blog-clear"
-              class="px-6 py-3 bg-black text-white text-xs uppercase tracking-widest hover:bg-gray-800 transition"
+              class="px-8 py-4 text-xs font-medium tracking-wide transition-all"
+              style="background-color: var(--accent-primary); color: var(--text-inverse); border-radius: var(--radius-md);"
             >
-              Clear
+              CLEAR
             </button>
           </div>
         </div>
       </div>
 
-      <div id="blog-feed" class="max-w-3xl mx-auto divide-y-2 divide-black/10"></div>
+      <div id="blog-feed" class="max-w-4xl mx-auto" style="border-top: 1px solid var(--border-subtle);"></div>
 
       <div class="loader" data-loader>
-        <span class="text-xs font-bold uppercase tracking-widest text-gray-500">Loading previous week...</span>
+        <span class="text-xs font-medium tracking-wide" style="color: var(--text-tertiary);">Loading previous week...</span>
       </div>
       <div data-sentinel class="h-10"></div>
     </div>
@@ -387,19 +398,18 @@ async function loadArchiveItems(count = 6) {
       const payload = encodeURIComponent(JSON.stringify(data));
 
       html += `
-        <div class="group border-b border-black md:border-r border-gray-300 p-8 flex flex-col cursor-pointer transition hover:bg-white" data-open-modal="1" data-item="${payload}">
-          <div class="overflow-hidden mb-6 border border-gray-200 relative aspect-[4/5] shadow-sm">
+        <div class="group p-0 flex flex-col cursor-pointer transition" data-open-modal="1" data-item="${payload}" style="background-color: var(--bg-card); border-radius: var(--radius-lg); overflow: hidden;">
+          <div class="overflow-hidden mb-6 relative aspect-[4/5]" style="border-radius: var(--radius-lg) var(--radius-lg) 0 0;">
             <img src="${data.image}" class="w-full h-full object-cover img-newspaper group-hover:scale-105 transition duration-500" alt="${escapeHtml(data.title)}" loading="lazy" decoding="async" />
-            <div class="absolute inset-0 bg-black/5 group-hover:bg-transparent transition"></div>
           </div>
-          <div class="mt-auto">
-            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 block">${escapeHtml(data.date)}</span>
-            <h3 class="text-2xl font-bold leading-none mb-3 group-hover:underline underline-offset-4 decoration-1">${escapeHtml(data.title)}</h3>
+          <div class="mt-auto px-6 pb-6">
+            <span class="text-xs font-medium tracking-wide mb-3 block" style="color: var(--text-tertiary);">${escapeHtml(data.date).toUpperCase()}</span>
+            <h3 class="text-xl font-semibold leading-tight mb-4 group-hover:opacity-70 transition" style="color: var(--text-primary); letter-spacing: -0.01em;">${escapeHtml(data.title)}</h3>
             <div class="flex flex-wrap gap-2">
               ${data.tags
                 .map(
                   (t) =>
-                    `<span class="text-[10px] border border-gray-300 px-1.5 py-0.5 text-gray-500 uppercase tracking-wide">${escapeHtml(
+                    `<span class="text-xs px-3 py-1 uppercase tracking-wide" style="background-color: var(--bg-secondary); color: var(--text-secondary); border-radius: var(--radius-full);">${escapeHtml(
                       t
                     )}</span>`
                 )
@@ -439,21 +449,21 @@ async function loadShopItems(count = 6) {
       const payload = encodeURIComponent(JSON.stringify(data));
 
       html += `
-        <div class="group border-b border-black md:border-r border-gray-300 p-8 flex flex-col cursor-pointer transition hover:bg-white" data-open-modal="1" data-item="${payload}">
-          <div class="overflow-hidden mb-6 border border-gray-200 relative aspect-[1] shadow-sm">
+        <div class="group p-0 flex flex-col cursor-pointer transition" data-open-modal="1" data-item="${payload}" style="background-color: var(--bg-card); border-radius: var(--radius-lg); overflow: hidden;">
+          <div class="overflow-hidden mb-6 relative aspect-[1]" style="border-radius: var(--radius-lg) var(--radius-lg) 0 0;">
             <img src="${data.image}" class="w-full h-full object-cover img-newspaper group-hover:scale-105 transition duration-500" alt="${escapeHtml(data.title)}" loading="lazy" decoding="async" />
-            <div class="absolute top-2 right-2 bg-black text-white px-2 py-1 text-xs font-bold uppercase opacity-0 group-hover:opacity-100 transition">Quick Add</div>
+            <div class="absolute top-3 right-3 px-3 py-1.5 text-xs font-medium uppercase opacity-0 group-hover:opacity-100 transition" style="background-color: var(--accent-primary); color: var(--text-inverse); border-radius: var(--radius-md);">Quick Add</div>
           </div>
-          <div class="mt-auto flex justify-between items-start">
-            <div>
-              <h3 class="text-xl font-bold leading-none mb-2 group-hover:underline underline-offset-4 decoration-1">${escapeHtml(
+          <div class="mt-auto px-6 pb-6 flex justify-between items-start gap-4">
+            <div class="flex-1">
+              <h3 class="text-lg font-semibold leading-tight mb-2 group-hover:opacity-70 transition" style="color: var(--text-primary); letter-spacing: -0.01em;">${escapeHtml(
                 data.title
               )}</h3>
               <div class="flex flex-wrap gap-2">
-                ${data.tags.map((t) => `<span class="text-[10px] text-gray-500 uppercase tracking-wide">${escapeHtml(t)}</span>`).join(" / ")}
+                ${data.tags.map((t) => `<span class="text-xs" style="color: var(--text-tertiary);">${escapeHtml(t).toUpperCase()}</span>`).join(" · ")}
               </div>
             </div>
-            <span class="text-lg font-serif italic font-bold">$${data.price}</span>
+            <span class="text-lg font-semibold flex-shrink-0" style="color: var(--text-primary);">$${data.price}</span>
           </div>
         </div>
       `;
@@ -489,24 +499,24 @@ async function loadBlogArticle() {
     const article = formatDataFromDB(articles[0]);
 
     const html = `
-      <article class="py-20 px-6 md:px-0">
-        <div class="text-center mb-10">
-          <span class="text-xs font-bold uppercase tracking-widest text-red-700 mb-2 block">Week of ${escapeHtml(article.date)}</span>
-          <h3 class="text-4xl md:text-6xl font-bold mb-4 font-serif leading-tight">${escapeHtml(article.title)}</h3>
-          <div class="flex justify-center items-center space-x-2 text-sm font-bold italic text-gray-500">
+      <article class="py-24 px-8 md:px-12">
+        <div class="text-center mb-14">
+          <span class="text-xs font-semibold tracking-wide mb-4 block" style="color: var(--text-tertiary);">WEEK OF ${escapeHtml(article.date).toUpperCase()}</span>
+          <h3 class="text-4xl md:text-6xl font-semibold mb-6 leading-tight" style="color: var(--text-primary); letter-spacing: -0.03em;">${escapeHtml(article.title)}</h3>
+          <div class="flex justify-center items-center space-x-2 text-sm font-medium" style="color: var(--text-secondary);">
             <span>By ${escapeHtml(article.author)}</span>
           </div>
         </div>
 
-        <div class="w-full aspect-[21/9] mb-12 border border-black overflow-hidden relative">
-          <img src="${article.image}" class="w-full h-full object-cover grayscale contrast-125" alt="${escapeHtml(article.title)}" loading="lazy" decoding="async" />
+        <div class="w-full aspect-[21/9] mb-16 overflow-hidden relative" style="border-radius: var(--radius-lg);">
+          <img src="${article.image}" class="w-full h-full object-cover" alt="${escapeHtml(article.title)}" loading="lazy" decoding="async" style="filter: saturate(0.9);" />
         </div>
 
-        <div class="prose prose-lg prose-headings:font-serif font-serif mx-auto text-gray-800 leading-relaxed text-justify">
+        <div class="prose prose-lg mx-auto leading-relaxed" style="color: var(--text-secondary);">
           ${article.content}
         </div>
 
-        <div class="mt-16 flex justify-center text-gray-300 tracking-[1em]">***</div>
+        <div class="mt-20 flex justify-center tracking-[1em]" style="color: var(--border-medium);">***</div>
       </article>
     `;
 

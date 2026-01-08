@@ -21,24 +21,26 @@
 
 <body class="min-h-screen flex flex-col md:flex-row">
   <!-- ================================================================
-       Sidebar
+       Sidebar - Modern Premium Design
   ================================================================= -->
   <aside
-    class="w-full md:w-72 md:h-screen md:sticky md:top-0 border-b md:border-b-0 md:border-r border-black flex flex-col bg-[#FDFBF7] z-40 flex-shrink-0 will-change-transform"
+    class="w-full md:w-80 md:h-screen md:sticky md:top-0 flex flex-col z-40 flex-shrink-0 will-change-transform"
+    style="background-color: var(--bg-card); box-shadow: var(--shadow-sm);"
   >
-    <div class="p-6 md:p-8 border-b border-black text-center md:text-left">
+    <div class="p-8 md:p-12 text-center md:text-left" style="border-bottom: 1px solid var(--border-subtle);">
       <h1
-        class="text-3xl md:text-4xl font-black uppercase tracking-tighter leading-none cursor-pointer transition-all duration-300 hover:tracking-tight hover:opacity-70"
+        class="text-3xl md:text-5xl font-bold tracking-tight leading-none cursor-pointer transition-all duration-300 hover:opacity-70"
         data-route="home"
+        style="color: var(--text-primary); letter-spacing: -0.03em;"
       >
         The Daily<br />Aesthetic
       </h1>
-      <p class="mt-3 text-xs italic font-medium text-gray-500">Vol. 104 &bull; Global Edition</p>
+      <p class="mt-4 text-xs font-medium tracking-wide" style="color: var(--text-tertiary);">VOL. 104 · GLOBAL EDITION</p>
     </div>
 
-    <nav class="p-6 md:p-8 flex-grow flex items-center md:items-start justify-center md:justify-start">
+    <nav class="p-8 md:p-12 flex-grow flex items-center md:items-start justify-center md:justify-start">
       <ul
-        class="flex flex-row md:flex-col space-x-6 md:space-x-0 md:space-y-6 text-sm md:text-lg font-bold uppercase tracking-widest text-center md:text-left w-full"
+        class="flex flex-row md:flex-col space-x-6 md:space-x-0 md:space-y-8 text-sm md:text-base font-medium tracking-wide text-center md:text-left w-full"
       >
         <li>
           <button class="nav-link w-full text-left active" data-route="home" data-target="home">Front Page</button>
@@ -55,11 +57,11 @@
       </ul>
     </nav>
 
-    <div class="hidden md:block p-8 border-t border-black">
-      <div id="current-date" class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2"></div>
-      <p class="text-[10px] text-gray-400 leading-tight">
+    <div class="hidden md:block p-12" style="border-top: 1px solid var(--border-subtle);">
+      <div id="current-date" class="text-xs font-semibold tracking-wide mb-3" style="color: var(--text-tertiary);"></div>
+      <p class="text-xs leading-relaxed" style="color: var(--text-tertiary);">
         Curating minimalism and design since 2024.<br />
-        &copy; The Daily Aesthetic.
+        © The Daily Aesthetic.
       </p>
     </div>
   </aside>
@@ -70,53 +72,57 @@
   <div class="flex-grow flex flex-col min-h-screen">
     <main id="app" class="flex-grow w-full"><!-- injected by JS --></main>
 
-    <footer class="md:hidden border-t-2 border-black py-8 bg-[#1a1a1a] text-[#FDFBF7] text-center">
-      <p class="text-xs uppercase tracking-widest">&copy; 2024 The Daily Aesthetic.</p>
+    <footer class="md:hidden py-12 text-center" style="background-color: var(--bg-secondary); border-top: 1px solid var(--border-subtle);">
+      <p class="text-xs tracking-wide" style="color: var(--text-secondary);">© 2024 The Daily Aesthetic.</p>
     </footer>
   </div>
 
   <!-- ================================================================
-       Modal
+       Modal - Modern Premium Design
   ================================================================= -->
   <div
     id="modal-overlay"
-    class="fixed inset-0 bg-black/40 z-50 hidden opacity-0 flex items-center justify-center p-4 will-change-opacity"
+    class="fixed inset-0 z-50 hidden opacity-0 flex items-center justify-center p-6 will-change-opacity"
     data-modal-overlay
+    style="background-color: var(--overlay-bg);"
   >
     <div
       id="modal-content"
-      class="bg-[#FDFBF7] w-full max-w-4xl max-h-[90vh] overflow-y-auto border-2 border-black shadow-2xl transform scale-95 opacity-0 flex flex-col md:flex-row will-change-transform gpu-accelerated"
+      class="w-full max-w-5xl max-h-[90vh] overflow-y-auto transform scale-95 opacity-0 flex flex-col md:flex-row will-change-transform gpu-accelerated"
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
       onclick="event.stopPropagation()"
       data-modal-content
+      style="background-color: var(--bg-card); border-radius: var(--radius-xl); box-shadow: var(--shadow-2xl);"
     >
-      <div class="w-full md:w-1/2 h-64 md:h-auto relative overflow-hidden">
-        <img id="modal-img" src="" class="absolute inset-0 w-full h-full object-cover grayscale transition-transform duration-700 hover:scale-110" alt="" />
+      <div class="w-full md:w-1/2 h-72 md:h-auto relative overflow-hidden" style="border-radius: var(--radius-xl) 0 0 var(--radius-xl);">
+        <img id="modal-img" src="" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-105" alt="" style="filter: saturate(0.9);" />
       </div>
 
-      <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col relative">
+      <div class="w-full md:w-1/2 p-10 md:p-14 flex flex-col relative">
         <button
-          class="absolute top-4 right-4 hover:bg-black hover:text-white p-2 rounded-full transition-all duration-200"
+          class="absolute top-6 right-6 p-3 rounded-full transition-all duration-300 hover:scale-110"
           aria-label="Close"
           data-modal-close
+          style="background-color: var(--bg-secondary); color: var(--text-primary);"
         >
           <i data-lucide="x"></i>
         </button>
 
-        <span id="modal-date" class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-2"></span>
-        <h2 id="modal-title" class="text-3xl md:text-4xl font-bold mb-6 leading-tight"></h2>
+        <span id="modal-date" class="text-xs font-semibold tracking-wide mb-3" style="color: var(--text-tertiary);"></span>
+        <h2 id="modal-title" class="text-3xl md:text-4xl font-semibold mb-6 leading-tight" style="color: var(--text-primary); letter-spacing: -0.02em;"></h2>
 
-        <div class="prose prose-sm font-serif text-gray-800 flex-grow overflow-y-auto pr-2">
+        <div class="prose prose-sm flex-grow overflow-y-auto pr-2" style="color: var(--text-secondary); line-height: 1.7;">
           <p id="modal-desc"></p>
         </div>
 
-        <div class="mt-8 pt-6 border-t border-black/10 flex justify-between items-center">
-          <span id="modal-tags" class="text-xs uppercase font-bold text-gray-400"></span>
+        <div class="mt-10 pt-6 flex justify-between items-center" style="border-top: 1px solid var(--border-subtle);">
+          <span id="modal-tags" class="text-xs font-medium tracking-wide" style="color: var(--text-tertiary);"></span>
           <button
             id="modal-action-btn"
-            class="bg-black text-white px-6 py-3 text-xs uppercase tracking-widest hover:bg-gray-800 transition-all duration-300 hover:tracking-wide hover:px-8 hover:shadow-lg"
+            class="px-8 py-4 text-sm font-medium tracking-wide transition-all duration-300"
+            style="background-color: var(--accent-primary); color: var(--text-inverse); border-radius: var(--radius-md);"
           >
             View Full Project
           </button>
