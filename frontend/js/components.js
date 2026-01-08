@@ -214,3 +214,212 @@ export function createCardFromData(data, type = 'project', variant = 'pinterest'
 export function batchCreateCards(dataArray, type = 'project', variant = 'pinterest') {
   return dataArray.map(data => createCardFromData(data, type, variant));
 }
+
+/* ================================================================
+   Drop Card Component - Reverse Chronological Culture
+================================================================= */
+export class DropCard {
+  constructor(data, dropNumber, type = 'project') {
+    this.data = data;
+    this.dropNumber = dropNumber;
+    this.type = type;
+    this.status = this._determineStatus();
+  }
+
+  _determineStatus() {
+    // Determine drop status based on data
+    // In a real app, this would check actual dates and inventory
+    const rand = Math.random();
+    if (this.data.soldOut || rand < 0.15) return 'sold-out';
+    if (this.data.upcoming || rand < 0.25) return 'upcoming';
+    if (this.data.limited || rand < 0.4) return 'limited';
+    if (rand < 0.5) return 'mystery';
+    return 'live';
+  }
+
+  _getStatusText() {
+    const statusMap = {
+      'live': 'Live Now',
+      'upcoming': 'Coming Soon',
+      'sold-out': 'Sold Out',
+      'limited': 'Limited Edition',
+      'mystery': 'Mystery Drop'
+    };
+    return statusMap[this.status] || 'Available';
+  }
+
+  _renderCountdown() {
+    if (this.status !== 'upcoming') return '';
+
+    // Mock countdown - in real app, calculate from actual date
+    const days = Math.floor(Math.random() * 7);
+    const hours = Math.floor(Math.random() * 24);
+    const minutes = Math.floor(Math.random() * 60);
+
+    return `
+      <div class="drop-countdown">
+        <div class="drop-countdown__segment">
+          <div class="drop-countdown__number">${String(days).padStart(2, '0')}</div>
+          <div class="drop-countdown__label">Days</div>
+        </div>
+        <div class="drop-countdown__segment">
+          <div class="drop-countdown__number">${String(hours).padStart(2, '0')}</div>
+          <div class="drop-countdown__label">Hours</div>
+        </div>
+        <div class="drop-countdown__segment">
+          <div class="drop-countdown__number">${String(minutes).padStart(2, '0')}</div>
+          <div class="drop-countdown__label">Min</div>
+        </div>
+      </div>
+    `;
+  }
+
+  _renderMetadata() {
+    const items = [];
+
+    // Drop date
+    items.push(`
+      <div class="drop-card__meta-item">
+        <span class="drop-card__meta-label">Drop Date</span>
+        <span class="drop-card__meta-value">${escapeHtml(this.data.date)}</span>
+      </div>
+    `);
+
+    // Limited quantity (if applicable)
+    if (this.status === 'limited' || this.status === 'live') {
+      const quantity = Math.floor(Math.random() * 200) + 50;
+      items.push(`
+        <div class="drop-card__meta-item">
+          <span class="drop-card__meta-label">Quantity</span>
+          <span class="drop-card__meta-value highlight">Only ${quantity} Available</span>
+        </div>
+      `);
+    }
+
+    // Price (for products)
+    if (this.type === 'product' && this.data.price) {
+      items.push(`
+        <div class="drop-card__meta-item">
+          <span class="drop-card__meta-label">Price</span>
+          <span class="drop-card__meta-value">$${this.data.price}</span>
+        </div>
+      `);
+    }
+
+    // Category/Type
+    if (this.data.tags && this.data.tags.length > 0) {
+      items.push(`
+        <div class="drop-card__meta-item">
+          <span class="drop-card__meta-label">Category</span>
+          <span class="drop-card__meta-value">${escapeHtml(this.data.tags[0])}</span>
+        </div>
+      `);
+    }
+
+    return items.join('');
+  }
+
+  _renderActions() {
+    if (this.status === 'sold-out') {
+      return `
+        <div class="drop-card__actions">
+          <button class="drop-card__cta disabled">Sold Out</button>
+          <button class="drop-card__notify">Notify on Restock</button>
+        </div>
+      `;
+    }
+
+    if (this.status === 'upcoming' || this.status === 'mystery') {
+      return `
+        <div class="drop-card__actions">
+          <button class="drop-card__cta disabled">Not Yet Available</button>
+          <button class="drop-card__notify">Get Notified</button>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="drop-card__actions">
+        <button class="drop-card__cta" data-open-modal="1" data-item="${encodeURIComponent(JSON.stringify(this.data))}">
+          ${this.type === 'product' ? 'Shop Now' : 'View Drop'}
+        </button>
+      </div>
+    `;
+  }
+
+  createElement() {
+    const card = document.createElement('article');
+    card.className = 'drop-card stagger-item';
+
+    const imageClass = this.status === 'mystery' ? 'drop-card__image mystery' : 'drop-card__image';
+    const isSoldOut = this.status === 'sold-out';
+    const isLimited = this.status === 'limited';
+
+    card.innerHTML = `
+      <div class="drop-card__container">
+        <!-- Image Section -->
+        <div class="drop-card__image-section">
+          ${isLimited ? '<div class="drop-limited-badge">Limited Edition</div>' : ''}
+
+          <img
+            src="${this.data.image}"
+            class="${imageClass}"
+            alt="${escapeHtml(this.data.title)}"
+            loading="lazy"
+            decoding="async"
+          />
+
+          ${this.status === 'mystery' ? `
+            <div class="drop-mystery-overlay">
+              <i data-lucide="lock" class="drop-mystery-overlay__icon"></i>
+              <div class="drop-mystery-overlay__text">Unrevealed</div>
+            </div>
+          ` : ''}
+
+          ${isSoldOut ? `
+            <div class="drop-card__sold-out-overlay">
+              <div class="drop-card__sold-out-text">Sold Out</div>
+            </div>
+          ` : ''}
+        </div>
+
+        <!-- Content Section -->
+        <div class="drop-card__content">
+          <div>
+            <div class="drop-status-badge ${this.status}">
+              <span class="drop-status-badge__dot"></span>
+              <span>${this._getStatusText()}</span>
+            </div>
+
+            <div class="drop-card__drop-number">Drop #${this.dropNumber}</div>
+            <h2 class="drop-card__title">${escapeHtml(this.data.title)}</h2>
+            <p class="drop-card__description">${escapeHtml(this.data.description || this.data.excerpt || '')}</p>
+
+            ${this._renderCountdown()}
+
+            <div class="drop-card__metadata">
+              ${this._renderMetadata()}
+            </div>
+          </div>
+
+          ${this._renderActions()}
+        </div>
+      </div>
+    `;
+
+    return card;
+  }
+}
+
+/* ================================================================
+   Utilities for Drop System
+================================================================= */
+export function createDropCard(data, dropNumber, type = 'project') {
+  return new DropCard(data, dropNumber, type).createElement();
+}
+
+export function batchCreateDropCards(dataArray, startNumber = 1, type = 'project') {
+  return dataArray.map((data, index) =>
+    createDropCard(data, startNumber + index, type)
+  );
+}
