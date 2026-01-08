@@ -82,49 +82,77 @@
   ================================================================= -->
   <div
     id="modal-overlay"
-    class="fixed inset-0 z-50 hidden opacity-0 flex items-center justify-center p-6 will-change-opacity"
+    class="fixed inset-0 z-50 hidden opacity-0 flex items-center justify-center p-4 md:p-6 will-change-opacity"
     data-modal-overlay
     style="background-color: var(--overlay-bg);"
   >
     <div
       id="modal-content"
-      class="w-full max-w-5xl max-h-[90vh] overflow-y-auto transform scale-95 opacity-0 flex flex-col md:flex-row will-change-transform gpu-accelerated"
+      class="w-full max-w-6xl transform scale-95 opacity-0 flex flex-col md:flex-row will-change-transform gpu-accelerated overflow-hidden"
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
       onclick="event.stopPropagation()"
       data-modal-content
-      style="background-color: var(--bg-card); border-radius: var(--radius-xl); box-shadow: var(--shadow-2xl);"
+      style="background-color: var(--bg-card); border-radius: var(--radius-xl);"
     >
-      <div class="w-full md:w-1/2 h-72 md:h-auto relative overflow-hidden" style="border-radius: var(--radius-xl) 0 0 var(--radius-xl);">
-        <img id="modal-img" src="" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-105" alt="" style="filter: saturate(0.9);" />
+      <!-- Pinterest-style close button -->
+      <button
+        id="modal-close-btn"
+        class="absolute top-5 right-5 z-10"
+        aria-label="Close"
+        data-modal-close
+      >
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <!-- Modal Image Section -->
+      <div class="w-full md:w-1/2 h-64 md:h-auto relative overflow-hidden modal-image-container">
+        <img
+          id="modal-img"
+          src=""
+          class="absolute inset-0 w-full h-full object-cover"
+          alt=""
+          style="filter: saturate(0.95);"
+        />
       </div>
 
-      <div class="w-full md:w-1/2 p-10 md:p-14 flex flex-col relative">
-        <button
-          class="absolute top-6 right-6 p-3 rounded-full transition-all duration-300 hover:scale-110"
-          aria-label="Close"
-          data-modal-close
-          style="background-color: var(--bg-secondary); color: var(--text-primary);"
-        >
-          <i data-lucide="x"></i>
-        </button>
-
-        <span id="modal-date" class="text-xs font-semibold tracking-wide mb-3" style="color: var(--text-tertiary);"></span>
-        <h2 id="modal-title" class="text-3xl md:text-4xl font-semibold mb-6 leading-tight" style="color: var(--text-primary); letter-spacing: -0.02em;"></h2>
-
-        <div class="prose prose-sm flex-grow overflow-y-auto pr-2" style="color: var(--text-secondary); line-height: 1.7;">
-          <p id="modal-desc"></p>
+      <!-- Modal Content Section -->
+      <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col max-h-[90vh] overflow-y-auto">
+        <div class="modal-header">
+          <div class="modal-meta">
+            <span id="modal-date" class="modal-badge"></span>
+          </div>
+          <h2 id="modal-title" class="text-2xl md:text-4xl font-bold leading-tight" style="color: var(--text-primary); letter-spacing: -0.02em;"></h2>
         </div>
 
-        <div class="mt-10 pt-6 flex justify-between items-center" style="border-top: 1px solid var(--border-subtle);">
-          <span id="modal-tags" class="text-xs font-medium tracking-wide" style="color: var(--text-tertiary);"></span>
+        <div class="flex-grow mb-8">
+          <p id="modal-desc" class="text-base leading-relaxed" style="color: var(--text-secondary);"></p>
+        </div>
+
+        <div class="modal-tags-section mb-6">
+          <div id="modal-tags" class="flex flex-wrap gap-2"></div>
+        </div>
+
+        <!-- Pinterest-style action buttons -->
+        <div class="modal-action-group">
           <button
             id="modal-action-btn"
-            class="px-8 py-4 text-sm font-medium tracking-wide transition-all duration-300"
-            style="background-color: var(--accent-primary); color: var(--text-inverse); border-radius: var(--radius-md);"
+            class="modal-action-btn-primary"
           >
-            View Full Project
+            Save
+          </button>
+          <button
+            class="modal-action-btn-secondary"
+            aria-label="Share"
+          >
+            <i data-lucide="share-2" class="w-5 h-5"></i>
+          </button>
+          <button
+            class="modal-action-btn-secondary"
+            aria-label="More options"
+          >
+            <i data-lucide="more-horizontal" class="w-5 h-5"></i>
           </button>
         </div>
       </div>

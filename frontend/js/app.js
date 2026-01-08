@@ -5,6 +5,7 @@
 
 import api from './api.js';
 import { escapeHtml, $, $$, appendHTML, formatDataFromDB } from './utils.js';
+import { createCardFromData, batchCreateCards } from './components.js';
 
 /* ================================================================
    App State
@@ -131,7 +132,7 @@ function renderArchive() {
         </div>
       </div>
 
-      <div id="archive-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-8 md:p-16"></div>
+      <div id="archive-grid" class="masonry-grid"></div>
 
       <!-- sentinel used by IntersectionObserver -->
       <div class="loader" data-loader>
@@ -200,7 +201,7 @@ function renderShop() {
         </div>
       </div>
 
-      <div id="shop-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-8 md:p-16"></div>
+      <div id="shop-grid" class="masonry-grid"></div>
 
       <div class="loader" data-loader>
         <span class="inline-block w-2 h-2 rounded-full animate-bounce mr-1" style="background-color: var(--text-tertiary);"></span>
@@ -391,38 +392,18 @@ async function loadArchiveItems(count = 6) {
     const response = await api.getProjects(state.archiveIndex, count, state.filters.archive);
     const projects = response.data;
 
-    let html = "";
+    // Use modular Pinterest-style cards
+    const formattedData = projects.map(project => formatDataFromDB(project));
+    const cards = batchCreateCards(formattedData, 'project', 'pinterest');
 
-    for (const project of projects) {
-      const data = formatDataFromDB(project);
-      const payload = encodeURIComponent(JSON.stringify(data));
+    // Append cards to masonry grid
+    cards.forEach(card => grid.appendChild(card));
 
-      html += `
-        <div class="group p-0 flex flex-col cursor-pointer transition" data-open-modal="1" data-item="${payload}" style="background-color: var(--bg-card); border-radius: var(--radius-lg); overflow: hidden;">
-          <div class="overflow-hidden mb-6 relative aspect-[4/5]" style="border-radius: var(--radius-lg) var(--radius-lg) 0 0;">
-            <img src="${data.image}" class="w-full h-full object-cover img-newspaper group-hover:scale-105 transition duration-500" alt="${escapeHtml(data.title)}" loading="lazy" decoding="async" />
-          </div>
-          <div class="mt-auto px-6 pb-6">
-            <span class="text-xs font-medium tracking-wide mb-3 block" style="color: var(--text-tertiary);">${escapeHtml(data.date).toUpperCase()}</span>
-            <h3 class="text-xl font-semibold leading-tight mb-4 group-hover:opacity-70 transition" style="color: var(--text-primary); letter-spacing: -0.01em;">${escapeHtml(data.title)}</h3>
-            <div class="flex flex-wrap gap-2">
-              ${data.tags
-                .map(
-                  (t) =>
-                    `<span class="text-xs px-3 py-1 uppercase tracking-wide" style="background-color: var(--bg-secondary); color: var(--text-secondary); border-radius: var(--radius-full);">${escapeHtml(
-                      t
-                    )}</span>`
-                )
-                .join("")}
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    appendHTML(grid, html);
     state.archiveIndex += projects.length;
     setLoading(false);
+
+    // Refresh icons for new cards
+    refreshIcons();
 
     // Setup scroll animations for newly added items
     setupScrollAnimations();
@@ -442,36 +423,18 @@ async function loadShopItems(count = 6) {
     const response = await api.getProducts(state.shopIndex, count, state.filters.shop);
     const products = response.data;
 
-    let html = "";
+    // Use modular Pinterest-style cards for products
+    const formattedData = products.map(product => formatDataFromDB(product));
+    const cards = batchCreateCards(formattedData, 'product', 'pinterest');
 
-    for (const product of products) {
-      const data = formatDataFromDB(product);
-      const payload = encodeURIComponent(JSON.stringify(data));
+    // Append cards to masonry grid
+    cards.forEach(card => grid.appendChild(card));
 
-      html += `
-        <div class="group p-0 flex flex-col cursor-pointer transition" data-open-modal="1" data-item="${payload}" style="background-color: var(--bg-card); border-radius: var(--radius-lg); overflow: hidden;">
-          <div class="overflow-hidden mb-6 relative aspect-[1]" style="border-radius: var(--radius-lg) var(--radius-lg) 0 0;">
-            <img src="${data.image}" class="w-full h-full object-cover img-newspaper group-hover:scale-105 transition duration-500" alt="${escapeHtml(data.title)}" loading="lazy" decoding="async" />
-            <div class="absolute top-3 right-3 px-3 py-1.5 text-xs font-medium uppercase opacity-0 group-hover:opacity-100 transition" style="background-color: var(--accent-primary); color: var(--text-inverse); border-radius: var(--radius-md);">Quick Add</div>
-          </div>
-          <div class="mt-auto px-6 pb-6 flex justify-between items-start gap-4">
-            <div class="flex-1">
-              <h3 class="text-lg font-semibold leading-tight mb-2 group-hover:opacity-70 transition" style="color: var(--text-primary); letter-spacing: -0.01em;">${escapeHtml(
-                data.title
-              )}</h3>
-              <div class="flex flex-wrap gap-2">
-                ${data.tags.map((t) => `<span class="text-xs" style="color: var(--text-tertiary);">${escapeHtml(t).toUpperCase()}</span>`).join(" · ")}
-              </div>
-            </div>
-            <span class="text-lg font-semibold flex-shrink-0" style="color: var(--text-primary);">$${data.price}</span>
-          </div>
-        </div>
-      `;
-    }
-
-    appendHTML(grid, html);
     state.shopIndex += products.length;
     setLoading(false);
+
+    // Refresh icons for new cards
+    refreshIcons();
 
     // Setup scroll animations for newly added items
     setupScrollAnimations();
@@ -498,29 +461,10 @@ async function loadBlogArticle() {
 
     const article = formatDataFromDB(articles[0]);
 
-    const html = `
-      <article class="py-24 px-8 md:px-12">
-        <div class="text-center mb-14">
-          <span class="text-xs font-semibold tracking-wide mb-4 block" style="color: var(--text-tertiary);">WEEK OF ${escapeHtml(article.date).toUpperCase()}</span>
-          <h3 class="text-4xl md:text-6xl font-semibold mb-6 leading-tight" style="color: var(--text-primary); letter-spacing: -0.03em;">${escapeHtml(article.title)}</h3>
-          <div class="flex justify-center items-center space-x-2 text-sm font-medium" style="color: var(--text-secondary);">
-            <span>By ${escapeHtml(article.author)}</span>
-          </div>
-        </div>
+    // Use modular FeedCard component
+    const card = createCardFromData(article, 'article', 'feed');
+    feed.appendChild(card);
 
-        <div class="w-full aspect-[21/9] mb-16 overflow-hidden relative" style="border-radius: var(--radius-lg);">
-          <img src="${article.image}" class="w-full h-full object-cover" alt="${escapeHtml(article.title)}" loading="lazy" decoding="async" style="filter: saturate(0.9);" />
-        </div>
-
-        <div class="prose prose-lg mx-auto leading-relaxed" style="color: var(--text-secondary);">
-          ${article.content}
-        </div>
-
-        <div class="mt-20 flex justify-center tracking-[1em]" style="color: var(--border-medium);">***</div>
-      </article>
-    `;
-
-    appendHTML(feed, html);
     state.blogIndex += 1;
     setLoading(false);
 
@@ -547,25 +491,36 @@ function openModal(data) {
   const content = modal.content;
   const actionBtn = $("#modal-action-btn");
 
+  // Set modal content
   $("#modal-img").src = data.image;
   $("#modal-title").innerText = data.title;
-  $("#modal-date").innerText = data.date;
+  $("#modal-date").innerText = data.date.toUpperCase();
   $("#modal-desc").innerHTML = data.description;
-  $("#modal-tags").innerText = (data.tags || []).join(" / ");
 
+  // Render tags as badges (Pinterest-style)
+  const tagsContainer = $("#modal-tags");
+  tagsContainer.innerHTML = (data.tags || []).map(tag =>
+    `<span class="modal-badge">${escapeHtml(tag)}</span>`
+  ).join('');
+
+  // Set action button behavior
   if (data.price) {
-    actionBtn.innerText = `Add to Cart — $${data.price}`;
+    actionBtn.innerHTML = `<i data-lucide="bookmark"></i> <span>Save — $${data.price}</span>`;
     actionBtn.onclick = () => {
       alert(`${data.title} added to cart!`);
       closeModal();
     };
   } else {
-    actionBtn.innerText = "View Full Project";
-    actionBtn.onclick = () => alert("Project details view...");
+    actionBtn.innerHTML = `<i data-lucide="bookmark"></i> <span>Save</span>`;
+    actionBtn.onclick = () => {
+      alert(`Saved ${data.title} to your collection!`);
+      closeModal();
+    };
   }
 
   modal.lastFocus = document.activeElement;
 
+  // Open modal with Pinterest-style animation
   overlay.classList.remove("hidden");
   requestAnimationFrame(() => {
     overlay.classList.remove("opacity-0");
