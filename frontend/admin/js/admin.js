@@ -4,6 +4,17 @@ let currentTab = 'projects';
 let currentEditId = null;
 let currentDeleteId = null;
 
+// HTML escape helper to prevent XSS
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 // Check authentication
 function checkAuth() {
   const token = localStorage.getItem('adminToken');
@@ -103,22 +114,22 @@ function renderList(type, items) {
       <div class="bg-white border border-gray-200 hover:border-black transition p-6 flex items-start space-x-6">
         ${item.image_url ? `
           <img
-            src="${item.image_url}"
-            alt="${item.title}"
+            src="${escapeHtml(item.image_url)}"
+            alt="${escapeHtml(item.title)}"
             class="w-32 h-32 object-cover grayscale flex-shrink-0"
           />
         ` : ''}
 
         <div class="flex-grow">
-          <h3 class="text-xl font-bold mb-2">${item.title}</h3>
-          ${item.author ? `<p class="text-sm text-gray-600 mb-2">By ${item.author}</p>` : ''}
-          ${item.price ? `<p class="text-sm text-gray-600 mb-2">Price: $${item.price}</p>` : ''}
-          ${item.date ? `<p class="text-sm text-gray-500 mb-2">${item.date}</p>` : ''}
-          ${item.excerpt ? `<p class="text-sm text-gray-700 mb-2">${truncate(item.excerpt, 150)}</p>` : ''}
-          ${item.description ? `<p class="text-sm text-gray-700 mb-2">${truncate(item.description, 150)}</p>` : ''}
+          <h3 class="text-xl font-bold mb-2">${escapeHtml(item.title)}</h3>
+          ${item.author ? `<p class="text-sm text-gray-600 mb-2">By ${escapeHtml(item.author)}</p>` : ''}
+          ${item.price ? `<p class="text-sm text-gray-600 mb-2">Price: $${escapeHtml(item.price)}</p>` : ''}
+          ${item.date ? `<p class="text-sm text-gray-500 mb-2">${escapeHtml(item.date)}</p>` : ''}
+          ${item.excerpt ? `<p class="text-sm text-gray-700 mb-2">${escapeHtml(truncate(item.excerpt, 150))}</p>` : ''}
+          ${item.description ? `<p class="text-sm text-gray-700 mb-2">${escapeHtml(truncate(item.description, 150))}</p>` : ''}
           ${item.tags ? `<div class="flex flex-wrap gap-2 mt-2">
             ${(Array.isArray(item.tags) ? item.tags : []).map(tag =>
-              `<span class="text-xs px-2 py-1 bg-gray-100 text-gray-700">${tag}</span>`
+              `<span class="text-xs px-2 py-1 bg-gray-100 text-gray-700">${escapeHtml(tag)}</span>`
             ).join('')}
           </div>` : ''}
         </div>

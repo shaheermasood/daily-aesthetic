@@ -84,7 +84,7 @@ export class PinterestCard {
         <div class="pinterest-card__metadata">
           <span class="pinterest-card__price">$${this.data.price}</span>
           <div class="pinterest-card__tags">
-            ${this.data.tags.slice(0, 2).map(tag =>
+            ${(this.data.tags || []).slice(0, 2).map(tag =>
               `<span class="pinterest-card__tag">${escapeHtml(tag)}</span>`
             ).join('')}
           </div>
@@ -96,7 +96,7 @@ export class PinterestCard {
       <div class="pinterest-card__metadata">
         <span class="pinterest-card__date">${escapeHtml(this.data.date)}</span>
         <div class="pinterest-card__tags">
-          ${this.data.tags.slice(0, 3).map(tag =>
+          ${(this.data.tags || []).slice(0, 3).map(tag =>
             `<span class="pinterest-card__tag">${escapeHtml(tag)}</span>`
           ).join('')}
         </div>
@@ -185,7 +185,7 @@ export class FeedCard {
       </div>
 
       <div class="feed-card__content">
-        ${this.data.content}
+        ${escapeHtml(this.data.content)}
       </div>
 
       <div class="feed-card__divider">***</div>
