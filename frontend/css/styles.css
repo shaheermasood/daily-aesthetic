@@ -1177,6 +1177,510 @@ button:focus-visible,
 }
 
 /* ------------------------------------------------------------------
+   Drop Culture Layout Components - Streetwear/Hype Style
+------------------------------------------------------------------ */
+
+/* Drop Card - Large Format for Reverse Chronological Feed */
+.drop-card {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 48px;
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  transition: all var(--transition-base) var(--ease-out-smooth);
+}
+
+.drop-card:hover {
+  box-shadow: var(--shadow-2xl);
+  transform: translateY(-4px);
+}
+
+/* Drop Card Layout */
+.drop-card__container {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .drop-card__container {
+    flex-direction: row;
+    min-height: 400px;
+  }
+}
+
+/* Drop Image Section */
+.drop-card__image-section {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  background: var(--bg-secondary);
+}
+
+@media (min-width: 768px) {
+  .drop-card__image-section {
+    width: 60%;
+    height: auto;
+  }
+}
+
+.drop-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slower) var(--ease-out-smooth),
+              filter var(--transition-base) var(--ease-out-smooth);
+}
+
+.drop-card:hover .drop-card__image {
+  transform: scale(1.05);
+}
+
+/* Mystery/Unrevealed Drop Blur Effect */
+.drop-card__image.mystery {
+  filter: blur(20px) brightness(0.7);
+}
+
+.drop-card:hover .drop-card__image.mystery {
+  filter: blur(18px) brightness(0.8);
+}
+
+/* Drop Content Section */
+.drop-card__content {
+  position: relative;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+@media (min-width: 768px) {
+  .drop-card__content {
+    width: 40%;
+    padding: 48px;
+  }
+}
+
+/* Drop Status Badge */
+.drop-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+  width: fit-content;
+}
+
+.drop-status-badge.live {
+  background: var(--drop-active);
+  color: white;
+  box-shadow: 0 0 20px rgba(0, 213, 99, 0.4);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.drop-status-badge.upcoming {
+  background: var(--drop-upcoming);
+  color: var(--text-primary);
+}
+
+.drop-status-badge.sold-out {
+  background: var(--drop-sold-out);
+  color: white;
+}
+
+.drop-status-badge.limited {
+  background: var(--drop-limited);
+  color: white;
+}
+
+.drop-status-badge.mystery {
+  background: var(--drop-mystery);
+  color: white;
+}
+
+.drop-status-badge__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.drop-status-badge.live .drop-status-badge__dot {
+  background: white;
+  animation: pulse-dot 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(0, 213, 99, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(0, 213, 99, 0.6);
+  }
+}
+
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.2);
+  }
+}
+
+/* Drop Title & Meta */
+.drop-card__drop-number {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+
+.drop-card__title {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+
+@media (min-width: 768px) {
+  .drop-card__title {
+    font-size: 42px;
+  }
+}
+
+.drop-card__description {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+/* Drop Metadata */
+.drop-card__metadata {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px 0;
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 24px;
+}
+
+.drop-card__meta-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.drop-card__meta-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.drop-card__meta-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.drop-card__meta-value.highlight {
+  color: var(--drop-limited);
+  font-weight: 700;
+}
+
+/* Countdown Timer */
+.drop-countdown {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin: 24px 0;
+}
+
+.drop-countdown__segment {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 60px;
+}
+
+.drop-countdown__number {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.drop-countdown__label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 8px;
+}
+
+/* Drop Actions */
+.drop-card__actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.drop-card__cta {
+  flex: 1;
+  min-width: 140px;
+  padding: 16px 32px;
+  background: var(--accent-primary);
+  color: var(--text-inverse);
+  border-radius: var(--radius-full);
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+  transition: all var(--transition-base) var(--ease-out-smooth);
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+}
+
+.drop-card__cta:hover {
+  background: var(--text-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.drop-card__cta.disabled {
+  background: var(--text-tertiary);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.drop-card__cta.disabled:hover {
+  transform: none;
+}
+
+.drop-card__notify {
+  padding: 16px 24px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all var(--transition-base) var(--ease-out-smooth);
+  cursor: pointer;
+}
+
+.drop-card__notify:hover {
+  background: var(--accent-sand);
+}
+
+/* Sold Out Overlay */
+.drop-card__sold-out-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.drop-card__sold-out-text {
+  font-size: 48px;
+  font-weight: 900;
+  color: var(--drop-sold-out);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transform: rotate(-15deg);
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+@media (min-width: 768px) {
+  .drop-card__sold-out-text {
+    font-size: 72px;
+  }
+}
+
+/* Limited Edition Badge */
+.drop-limited-badge {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  padding: 10px 20px;
+  background: var(--drop-limited);
+  color: white;
+  border-radius: var(--radius-md);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  box-shadow: var(--shadow-lg);
+  z-index: 5;
+}
+
+/* Mystery Overlay Content */
+.drop-mystery-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 16px;
+  z-index: 5;
+}
+
+.drop-mystery-overlay__icon {
+  width: 80px;
+  height: 80px;
+  color: white;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+}
+
+.drop-mystery-overlay__text {
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* ------------------------------------------------------------------
+   Drop Feed Hero Section
+------------------------------------------------------------------ */
+.drop-hero {
+  position: relative;
+  width: 100%;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+}
+
+.drop-hero__background {
+  position: absolute;
+  inset: 0;
+  opacity: 0.3;
+}
+
+.drop-hero__background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(8px) brightness(0.5);
+}
+
+.drop-hero__content {
+  position: relative;
+  z-index: 10;
+  max-width: 900px;
+  padding: 48px 24px;
+  text-align: center;
+  color: white;
+}
+
+.drop-hero__eyebrow {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 16px;
+}
+
+.drop-hero__title {
+  font-size: 48px;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+@media (min-width: 768px) {
+  .drop-hero__title {
+    font-size: 72px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .drop-hero__title {
+    font-size: 96px;
+  }
+}
+
+.drop-hero__description {
+  font-size: 18px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 40px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.drop-hero__cta-group {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.drop-hero__cta {
+  padding: 18px 40px;
+  background: white;
+  color: var(--text-primary);
+  border-radius: var(--radius-full);
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all var(--transition-base) var(--ease-out-smooth);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+.drop-hero__cta:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+.drop-hero__cta.secondary {
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+}
+
+.drop-hero__cta.secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ------------------------------------------------------------------
    Mobile Optimizations for Pinterest-Style Layout
 ------------------------------------------------------------------ */
 @media (max-width: 768px) {

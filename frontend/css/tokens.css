@@ -21,6 +21,13 @@
   --accent-warm: #C9B8A8;         /* Warm beige */
   --accent-subtle: #E6DDD5;       /* Very light warm tone */
 
+  /* Drop Culture Colors - Exclusivity & Mystery */
+  --drop-active: #00D563;         /* Vibrant green for live drops */
+  --drop-upcoming: #FFB800;       /* Amber for upcoming */
+  --drop-sold-out: #FF3B30;       /* Red for sold out */
+  --drop-limited: #5E5CE6;        /* Purple for limited edition */
+  --drop-mystery: #8E8E93;        /* Gray for mystery/unrevealed */
+
   /* Border Colors - Subtle */
   --border-subtle: rgba(0, 0, 0, 0.06);
   --border-light: rgba(0, 0, 0, 0.08);

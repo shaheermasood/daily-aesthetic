@@ -5,7 +5,7 @@
 
 import api from './api.js';
 import { escapeHtml, $, $$, appendHTML, formatDataFromDB } from './utils.js';
-import { createCardFromData, batchCreateCards } from './components.js';
+import { createCardFromData, batchCreateCards, createDropCard, batchCreateDropCards } from './components.js';
 
 /* ================================================================
    App State
@@ -18,6 +18,8 @@ const state = {
   archiveIndex: 0,
   shopIndex: 0,
   blogIndex: 0,
+  dropsIndex: 0,
+  dropNumber: 100, // Start numbering from 100 (can be any number)
   isLoading: false,
   io: null,
   scrollObserver: null,
@@ -25,73 +27,128 @@ const state = {
   filters: {
     archive: {},
     shop: {},
-    blog: {}
-  }
+    blog: {},
+    drops: {}
+  },
+  latestDrop: null
 };
 
 /* ================================================================
    View templates
 ================================================================= */
 function renderHome() {
+  // Render hero section with latest drop
   return `
-    <div class="flex flex-col items-center justify-center min-h-screen py-24 px-6 md:px-16">
-      <div class="max-w-5xl w-full">
+    <div class="drop-hero">
+      <div class="drop-hero__background">
+        <img
+          src="https://picsum.photos/seed/hero-drop/1920/1080"
+          alt="Latest Drop Background"
+          loading="eager"
+        />
+      </div>
 
-        <div class="mb-12 flex justify-center items-center space-x-4">
-          <div class="h-[1px] w-16" style="background-color: var(--border-medium);"></div>
-          <span class="text-xs font-semibold tracking-wide flex items-center gap-2" style="color: var(--text-secondary);">
-            <span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background-color: var(--accent-sand);"></span>
-            PROJECT OF THE MONTH
-          </span>
-          <div class="h-[1px] w-16" style="background-color: var(--border-medium);"></div>
+      <div class="drop-hero__content">
+        <div class="drop-hero__eyebrow">Latest Drop • Live Now</div>
+        <h1 class="drop-hero__title">Exclusive Collection</h1>
+        <p class="drop-hero__description">
+          Discover our latest curated drop. Limited quantities available.
+          Each piece tells a story of craftsmanship and design excellence.
+        </p>
+
+        <div class="drop-hero__cta-group">
+          <button class="drop-hero__cta" data-route="drops">View All Drops</button>
+          <button class="drop-hero__cta secondary" data-route="archive">Browse Archive</button>
         </div>
+      </div>
+    </div>
 
-        <h2 class="text-5xl md:text-8xl font-bold mb-16 text-center leading-[0.95] hover:opacity-70 transition-opacity cursor-pointer" data-route="archive" style="color: var(--text-primary); letter-spacing: -0.04em;">
-          The Brutalist<br />Revival in Tokyo
-        </h2>
-
-        <div class="w-full aspect-[16/9] overflow-hidden mb-14 relative group cursor-pointer" data-route="archive" style="border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);">
-          <img
-            src="https://picsum.photos/seed/arch/1600/900"
-            class="w-full h-full object-cover img-newspaper group-hover:scale-105 transition duration-700"
-            alt="Hero Project"
-            loading="lazy"
-            decoding="async"
-          />
-          <div class="absolute bottom-6 right-6 px-4 py-2" style="background-color: var(--overlay-glass); backdrop-filter: blur(12px); border-radius: var(--radius-md);">
-            <p class="text-xs font-medium" style="color: var(--text-secondary);">Fig 1.1 — Exterior Facade</p>
+    <!-- Latest Drop Preview -->
+    <div class="py-16 px-6 md:px-16" style="background-color: var(--bg-primary);">
+      <div class="max-w-6xl mx-auto">
+        <div class="flex justify-between items-center mb-12">
+          <div>
+            <h2 class="text-3xl md:text-5xl font-bold mb-4" style="color: var(--text-primary); letter-spacing: -0.03em;">
+              Recent Drops
+            </h2>
+            <p class="text-base" style="color: var(--text-secondary);">
+              Explore our latest releases in reverse chronological order
+            </p>
           </div>
-        </div>
-
-        <div class="max-w-3xl mx-auto text-center">
-          <p class="text-lg md:text-xl leading-relaxed mb-8" style="color: var(--text-secondary); line-height: 1.8;">
-            <span class="font-semibold text-sm tracking-wide mr-2 block mb-4" style="color: var(--text-tertiary);">TOKYO, JAPAN</span>
-            In an era defined by glass towers and digital facades, one firm is returning to the raw honesty of concrete.
-            Our feature project this month explores the tactile nature of permanence in a transient city.
-          </p>
-
-          <div class="flex justify-center gap-12 py-8 my-12" style="border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);">
-            <div class="text-center">
-              <span class="block text-xs font-semibold tracking-wide mb-2" style="color: var(--text-tertiary);">ARCHITECT</span>
-              <span class="font-medium" style="color: var(--text-secondary);">Kengo Sato</span>
-            </div>
-            <div class="text-center">
-              <span class="block text-xs font-semibold tracking-wide mb-2" style="color: var(--text-tertiary);">YEAR</span>
-              <span class="font-medium" style="color: var(--text-secondary);">2024</span>
-            </div>
-            <div class="text-center">
-              <span class="block text-xs font-semibold tracking-wide mb-2" style="color: var(--text-tertiary);">AREA</span>
-              <span class="font-medium" style="color: var(--text-secondary);">450 sqm</span>
-            </div>
-          </div>
-
-          <button data-route="archive" class="group text-sm font-medium tracking-wide hover:opacity-70 transition-opacity" style="color: var(--text-primary);">
-            READ FULL STORY
-            <span class="inline-block transition-transform group-hover:translate-x-1 ml-2">&rarr;</span>
+          <button
+            data-route="drops"
+            class="px-6 py-3 text-sm font-semibold tracking-wide hover:opacity-70 transition-opacity"
+            style="color: var(--text-primary);"
+          >
+            View All →
           </button>
         </div>
 
+        <div id="home-drops-preview"></div>
       </div>
+    </div>
+  `;
+}
+
+function renderDrops() {
+  return `
+    <div class="w-full min-h-screen" style="background-color: var(--bg-primary);">
+      <!-- Header -->
+      <div class="py-16 px-8 md:px-16" style="background-color: var(--bg-card); border-bottom: 1px solid var(--border-subtle);">
+        <div class="max-w-6xl mx-auto">
+          <h2 class="text-4xl md:text-6xl font-semibold mb-6" style="color: var(--text-primary); letter-spacing: -0.03em;">
+            All Drops
+          </h2>
+          <p class="max-w-xl mb-10 leading-relaxed" style="color: var(--text-secondary);">
+            A reverse-chronological archive of our exclusive releases. Each drop represents a carefully curated selection of design excellence.
+          </p>
+
+          <!-- Filter Controls -->
+          <div class="flex flex-col md:flex-row gap-4 max-w-3xl">
+            <div class="flex-grow relative">
+              <input
+                type="text"
+                id="drops-search"
+                placeholder="Search drops..."
+                class="w-full px-5 py-4 text-sm transition-all"
+                style="background-color: var(--bg-elevated); border: 1px solid var(--border-light); border-radius: var(--radius-md); color: var(--text-primary);"
+              />
+              <i data-lucide="search" class="w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2" style="color: var(--text-tertiary);"></i>
+            </div>
+
+            <select
+              id="drops-status"
+              class="px-5 py-4 text-sm md:w-48 transition-all"
+              style="background-color: var(--bg-elevated); border: 1px solid var(--border-light); border-radius: var(--radius-md); color: var(--text-primary);"
+            >
+              <option value="">All Status</option>
+              <option value="live">Live Now</option>
+              <option value="upcoming">Coming Soon</option>
+              <option value="sold-out">Sold Out</option>
+              <option value="limited">Limited Edition</option>
+            </select>
+
+            <button
+              id="drops-clear"
+              class="px-8 py-4 text-xs font-medium tracking-wide transition-all"
+              style="background-color: var(--accent-primary); color: var(--text-inverse); border-radius: var(--radius-md);"
+            >
+              CLEAR
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Drops Feed -->
+      <div id="drops-feed" class="py-12 px-6 md:px-16"></div>
+
+      <!-- Loader -->
+      <div class="loader" data-loader>
+        <span class="inline-block w-2 h-2 rounded-full animate-bounce mr-1" style="background-color: var(--text-tertiary);"></span>
+        <span class="inline-block w-2 h-2 rounded-full animate-bounce mr-1 delay-75" style="background-color: var(--text-tertiary);"></span>
+        <span class="inline-block w-2 h-2 rounded-full animate-bounce delay-150" style="background-color: var(--text-tertiary);"></span>
+      </div>
+      <div data-sentinel class="h-10"></div>
     </div>
   `;
 }
@@ -372,6 +429,7 @@ function mountInfiniteScroll() {
       if (state.view === "archive") loadArchiveItems();
       if (state.view === "shop") loadShopItems();
       if (state.view === "blog") loadBlogArticle();
+      if (state.view === "drops") loadDrops();
     },
     { root: null, rootMargin: "800px 0px", threshold: 0.01 }
   );
@@ -381,6 +439,102 @@ function mountInfiniteScroll() {
 
 /* ================================================================
    Data loaders (using real API)
+================================================================= */
+
+// Load drops for the main drops feed (reverse chronological, all items)
+async function loadDrops(count = 5) {
+  const feed = $("#drops-feed");
+  if (!feed || state.isLoading) return;
+
+  setLoading(true);
+
+  try {
+    // Fetch all types of content and merge them (projects, products, articles)
+    const [projectsRes, productsRes, articlesRes] = await Promise.all([
+      api.getProjects(state.dropsIndex, Math.ceil(count / 3), state.filters.drops),
+      api.getProducts(state.dropsIndex, Math.ceil(count / 3), state.filters.drops),
+      api.getArticles(state.dropsIndex, Math.ceil(count / 3), state.filters.drops)
+    ]);
+
+    // Combine and format all items
+    let allItems = [
+      ...projectsRes.data.map(item => ({ ...formatDataFromDB(item), type: 'project' })),
+      ...productsRes.data.map(item => ({ ...formatDataFromDB(item), type: 'product' })),
+      ...articlesRes.data.map(item => ({ ...formatDataFromDB(item), type: 'article' }))
+    ];
+
+    // Sort by date (newest first) - reverse chronological
+    allItems.sort((a, b) => {
+      const dateA = new Date(a.date || a.created_at || 0);
+      const dateB = new Date(b.date || b.created_at || 0);
+      return dateB - dateA; // Descending order (newest first)
+    });
+
+    // Take only the count we need
+    allItems = allItems.slice(0, count);
+
+    // Create drop cards
+    const cards = allItems.map((item, index) => {
+      const currentDropNum = state.dropNumber - state.dropsIndex - index;
+      return createDropCard(item, currentDropNum, item.type);
+    });
+
+    // Append cards to feed
+    cards.forEach(card => feed.appendChild(card));
+
+    state.dropsIndex += allItems.length;
+    setLoading(false);
+
+    // Refresh icons for new cards
+    refreshIcons();
+    setupScrollAnimations();
+  } catch (error) {
+    console.error('Failed to load drops:', error);
+    setLoading(false);
+  }
+}
+
+// Load preview drops for home page
+async function loadHomeDropsPreview() {
+  const container = $("#home-drops-preview");
+  if (!container) return;
+
+  try {
+    // Load just the latest items
+    const [projectsRes, productsRes] = await Promise.all([
+      api.getProjects(0, 2, {}),
+      api.getProducts(0, 1, {})
+    ]);
+
+    let allItems = [
+      ...projectsRes.data.map(item => ({ ...formatDataFromDB(item), type: 'project' })),
+      ...productsRes.data.map(item => ({ ...formatDataFromDB(item), type: 'product' }))
+    ];
+
+    // Sort by date (newest first)
+    allItems.sort((a, b) => {
+      const dateA = new Date(a.date || a.created_at || 0);
+      const dateB = new Date(b.date || b.created_at || 0);
+      return dateB - dateA;
+    });
+
+    // Show top 3
+    allItems = allItems.slice(0, 3);
+
+    // Create drop cards
+    const cards = allItems.map((item, index) => {
+      return createDropCard(item, state.dropNumber - index, item.type);
+    });
+
+    cards.forEach(card => container.appendChild(card));
+    refreshIcons();
+  } catch (error) {
+    console.error('Failed to load home drops preview:', error);
+  }
+}
+
+/* ================================================================
+   Data loaders for original views (keeping for backwards compatibility)
 ================================================================= */
 async function loadArchiveItems(count = 6) {
   const grid = $("#archive-grid");
@@ -554,6 +708,37 @@ function closeModal() {
 ================================================================= */
 let searchTimeout = null;
 
+function setupDropsSearch() {
+  const searchInput = $("#drops-search");
+  const statusSelect = $("#drops-status");
+  const clearBtn = $("#drops-clear");
+
+  if (!searchInput || !statusSelect || !clearBtn) return;
+
+  const performSearch = () => {
+    state.filters.drops = {
+      search: searchInput.value.trim(),
+      status: statusSelect.value
+    };
+    state.dropsIndex = 0;
+    $("#drops-feed").innerHTML = '';
+    loadDrops(5);
+  };
+
+  searchInput.addEventListener("input", () => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(performSearch, 500);
+  });
+
+  statusSelect.addEventListener("change", performSearch);
+
+  clearBtn.addEventListener("click", () => {
+    searchInput.value = '';
+    statusSelect.value = '';
+    performSearch();
+  });
+}
+
 function setupArchiveSearch() {
   const searchInput = $("#archive-search");
   const tagInput = $("#archive-tag");
@@ -685,6 +870,19 @@ function router(view) {
   if (view === "home") {
     app.innerHTML = renderHome();
     refreshIcons();
+    loadHomeDropsPreview();
+    setupScrollAnimations();
+    return;
+  }
+
+  if (view === "drops") {
+    app.innerHTML = renderDrops();
+    refreshIcons();
+    state.dropsIndex = 0;
+    state.filters.drops = {};
+    setupDropsSearch();
+    loadDrops(5);
+    mountInfiniteScroll();
     setupScrollAnimations();
     return;
   }
