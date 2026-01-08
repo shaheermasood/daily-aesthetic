@@ -649,7 +649,8 @@ function openModal(data) {
   $("#modal-img").src = data.image;
   $("#modal-title").innerText = data.title;
   $("#modal-date").innerText = data.date.toUpperCase();
-  $("#modal-desc").innerHTML = data.description;
+  // Use textContent instead of innerHTML to prevent XSS
+  $("#modal-desc").textContent = data.description;
 
   // Render tags as badges (Pinterest-style)
   const tagsContainer = $("#modal-tags");

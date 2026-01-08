@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { requireAuth } = require('../middleware/auth');
+const { validateProject } = require('../middleware/validation');
 const { getAll, getById, create, update, remove } = require('../utils/crud-helpers');
 
 // GET all projects with pagination and search
@@ -37,7 +38,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST create new project
-router.post('/', requireAuth, async (req, res) => {
+router.post('/', requireAuth, validateProject, async (req, res) => {
   try {
     const { title, date, image_url, excerpt, description, tags } = req.body;
     const project = await create('projects', {
@@ -57,7 +58,7 @@ router.post('/', requireAuth, async (req, res) => {
 });
 
 // PUT update project
-router.put('/:id', requireAuth, async (req, res) => {
+router.put('/:id', requireAuth, validateProject, async (req, res) => {
   try {
     const { title, date, image_url, excerpt, description, tags } = req.body;
     const project = await update('projects', req.params.id, {
