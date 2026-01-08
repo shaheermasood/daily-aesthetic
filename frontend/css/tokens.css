@@ -1,41 +1,41 @@
 /* ------------------------------------------------------------------
-   Design Tokens & Custom Properties - Apple/Yeezy Inspired
-   Shared across all application styles
+   Design Tokens & Custom Properties - Retro Computing Terminal
+   1970s Mainframe & Microcomputer Era
 ------------------------------------------------------------------ */
 :root {
-  /* Neutral Earth Tone Palette - Yeezy Inspired */
-  --bg-primary: #F5F3F0;          /* Warm off-white */
-  --bg-secondary: #E8E5E0;        /* Light warm gray */
-  --bg-card: #FFFFFF;             /* Pure white cards */
-  --bg-elevated: #FAFAF8;         /* Subtle elevation */
+  /* Classic Terminal Palette - Green Phosphor CRT */
+  --bg-primary: #0D0D0D;          /* Deep black - CRT screen */
+  --bg-secondary: #1A1A1A;        /* Slightly lighter black */
+  --bg-card: #0F0F0F;             /* Card backgrounds */
+  --bg-elevated: #121212;         /* Elevated surfaces */
 
-  /* Text Colors - Minimalist Hierarchy */
-  --text-primary: #1C1B1A;        /* Almost black, warm undertone */
-  --text-secondary: #6B6866;      /* Warm medium gray */
-  --text-tertiary: #A19D98;       /* Light warm gray */
-  --text-inverse: #FFFFFF;
+  /* Phosphor Green Text - Classic Terminal */
+  --text-primary: #33FF33;        /* Bright phosphor green */
+  --text-secondary: #00CC00;      /* Medium phosphor green */
+  --text-tertiary: #009900;       /* Dim phosphor green */
+  --text-inverse: #0D0D0D;        /* Inverse (black on green) */
 
-  /* Accent Colors - Muted & Refined */
-  --accent-primary: #2C2C2C;      /* Charcoal for premium feel */
-  --accent-sand: #D4C5B9;         /* Warm sand/taupe */
-  --accent-warm: #C9B8A8;         /* Warm beige */
-  --accent-subtle: #E6DDD5;       /* Very light warm tone */
+  /* Accent Colors - Classic Computing */
+  --accent-primary: #00FF00;      /* Pure green for emphasis */
+  --accent-amber: #FFBB00;        /* Amber terminal alternative */
+  --accent-paper: #F5F0E8;        /* Teletype paper */
+  --accent-punch: #E8E0D0;        /* Punch card color */
 
-  /* Drop Culture Colors - Exclusivity & Mystery */
-  --drop-active: #00D563;         /* Vibrant green for live drops */
-  --drop-upcoming: #FFB800;       /* Amber for upcoming */
-  --drop-sold-out: #FF3B30;       /* Red for sold out */
-  --drop-limited: #5E5CE6;        /* Purple for limited edition */
-  --drop-mystery: #8E8E93;        /* Gray for mystery/unrevealed */
+  /* Drop Culture Colors - Retro Terminal Status */
+  --drop-active: #00FF00;         /* Bright green - system ready */
+  --drop-upcoming: #FFBB00;       /* Amber - loading/pending */
+  --drop-sold-out: #FF3333;       /* Red - error/halt */
+  --drop-limited: #00FFFF;        /* Cyan - special mode */
+  --drop-mystery: #666666;        /* Gray - uninitialized */
 
-  /* Border Colors - Subtle */
-  --border-subtle: rgba(0, 0, 0, 0.06);
-  --border-light: rgba(0, 0, 0, 0.08);
-  --border-medium: rgba(0, 0, 0, 0.12);
+  /* Border Colors - CRT Scanlines */
+  --border-subtle: rgba(51, 255, 51, 0.1);
+  --border-light: rgba(51, 255, 51, 0.2);
+  --border-medium: rgba(51, 255, 51, 0.3);
 
-  /* Overlay */
-  --overlay-bg: rgba(28, 27, 26, 0.4);
-  --overlay-glass: rgba(255, 255, 255, 0.7);
+  /* Overlay - CRT Glow Effects */
+  --overlay-bg: rgba(0, 0, 0, 0.85);
+  --overlay-glass: rgba(13, 13, 13, 0.9);
 
   /* Spacing - Generous Apple-style whitespace */
   --spacing-xs: 0.375rem;    /* 6px */
@@ -67,20 +67,27 @@
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
-  /* Shadows - Soft & Elevated */
-  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
-  --shadow-sm: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 4px 12px 0 rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 8px 24px 0 rgba(0, 0, 0, 0.08);
-  --shadow-xl: 0 16px 48px 0 rgba(0, 0, 0, 0.10);
-  --shadow-2xl: 0 24px 64px 0 rgba(0, 0, 0, 0.12);
+  /* Shadows - CRT Glow Effects */
+  --shadow-xs: 0 0 2px rgba(51, 255, 51, 0.3);
+  --shadow-sm: 0 0 4px rgba(51, 255, 51, 0.4);
+  --shadow-md: 0 0 8px rgba(51, 255, 51, 0.5);
+  --shadow-lg: 0 0 16px rgba(51, 255, 51, 0.6);
+  --shadow-xl: 0 0 24px rgba(51, 255, 51, 0.7);
+  --shadow-2xl: 0 0 32px rgba(51, 255, 51, 0.8);
 
-  /* Border Radius - Soft & Modern */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
-  --radius-full: 9999px;
+  /* Border Radius - Sharp Terminal Edges */
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 2px;
+  --radius-xl: 4px;
+  --radius-full: 0px;
+
+  /* Retro Computing Specific */
+  --phosphor-glow: 0 0 10px rgba(51, 255, 51, 0.7),
+                   0 0 20px rgba(51, 255, 51, 0.5),
+                   0 0 30px rgba(51, 255, 51, 0.3);
+  --scanline-opacity: 0.05;
+  --crt-curve: 2px;
 }
 
 /* ------------------------------------------------------------------

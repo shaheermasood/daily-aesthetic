@@ -5,12 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Daily Aesthetic</title>
 
-  <!-- Tailwind + Fonts + Icons -->
+  <!-- Tailwind + Retro Fonts + Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Classic Monospace Fonts - Terminal Era -->
   <link
-    href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:wght@400;500;600;700;900&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=IBM+Plex+Mono:wght@300;400;500;600;700&family=VT323&display=swap"
     rel="stylesheet"
   />
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -27,15 +28,22 @@
     class="w-full md:w-80 md:h-screen md:sticky md:top-0 flex flex-col z-40 flex-shrink-0 will-change-transform"
     style="background-color: var(--bg-card); box-shadow: var(--shadow-sm);"
   >
-    <div class="p-8 md:p-12 text-center md:text-left" style="border-bottom: 1px solid var(--border-subtle);">
+    <div class="p-8 md:p-12 text-center md:text-left ascii-border-bottom" style="border-bottom: 1px solid var(--border-subtle);">
+      <!-- ASCII Art Title Banner -->
+      <pre class="text-xs leading-none mb-4" style="color: var(--text-secondary); opacity: 0.6; font-family: 'IBM Plex Mono', monospace;">
+╔═══════════════════╗
+║  SYSTEM READY    ║
+╚═══════════════════╝</pre>
       <h1
-        class="text-3xl md:text-5xl font-bold tracking-tight leading-none cursor-pointer transition-all duration-300 hover:opacity-70"
+        class="text-2xl md:text-4xl font-bold tracking-tight leading-none cursor-pointer transition-all duration-300 hover:opacity-70"
         data-route="home"
-        style="color: var(--text-primary); letter-spacing: -0.03em;"
+        style="color: var(--text-primary); letter-spacing: 0.1em; font-family: 'IBM Plex Mono', monospace;"
       >
-        The Daily<br />Aesthetic
+        THE DAILY<br />AESTHETIC
       </h1>
-      <p class="mt-4 text-xs font-medium tracking-wide" style="color: var(--text-tertiary);">DROP CULTURE · 2025 EDITION</p>
+      <p class="mt-4 text-xs font-medium tracking-wide" style="color: var(--text-tertiary); font-family: 'IBM Plex Mono', monospace;">
+        > DROP CULTURE ･ EST.1975_
+      </p>
     </div>
 
     <nav class="p-8 md:p-12 flex-grow flex items-center md:items-start justify-center md:justify-start">
@@ -60,12 +68,13 @@
       </ul>
     </nav>
 
-    <div class="hidden md:block p-12" style="border-top: 1px solid var(--border-subtle);">
-      <div id="current-date" class="text-xs font-semibold tracking-wide mb-3" style="color: var(--text-tertiary);"></div>
-      <p class="text-xs leading-relaxed" style="color: var(--text-tertiary);">
-        Exclusive drops and curated collections.<br />
-        © 2025 The Daily Aesthetic.
-      </p>
+    <div class="hidden md:block p-12 ascii-border-top" style="border-top: 1px solid var(--border-subtle);">
+      <div id="current-date" class="text-xs font-semibold tracking-wide mb-3" style="color: var(--text-tertiary); font-family: 'IBM Plex Mono', monospace;"></div>
+      <pre class="text-xs leading-relaxed" style="color: var(--text-tertiary); font-family: 'IBM Plex Mono', monospace;">
+> TERMINAL_V1.0
+> DROPS.ACTIVE
+> (C) 1975-2025
+> AESTHETIC.SYS</pre>
     </div>
   </aside>
 
@@ -76,7 +85,7 @@
     <main id="app" class="flex-grow w-full"><!-- injected by JS --></main>
 
     <footer class="md:hidden py-12 text-center" style="background-color: var(--bg-secondary); border-top: 1px solid var(--border-subtle);">
-      <p class="text-xs tracking-wide" style="color: var(--text-secondary);">© 2024 The Daily Aesthetic.</p>
+      <p class="text-xs tracking-wide" style="color: var(--text-secondary); font-family: 'IBM Plex Mono', monospace;">(C) 1975-2025 AESTHETIC.SYS</p>
     </footer>
   </div>
 

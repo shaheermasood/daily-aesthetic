@@ -1,63 +1,71 @@
 /* ------------------------------------------------------------------
-   Admin Panel Custom Styles - Modern Design
+   Admin Panel Custom Styles - Retro Terminal Theme
 ------------------------------------------------------------------ */
 
 /* Import Shared Design Tokens */
 @import url('../css/tokens.css');
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI',
-               'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'IBM Plex Mono', 'Courier Prime', 'Courier New', monospace;
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+  text-shadow: var(--phosphor-glow);
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI',
-               'Roboto', 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-family: 'IBM Plex Mono', 'Courier Prime', monospace;
+  font-weight: 700;
+  letter-spacing: 0.05em;
   color: var(--text-primary);
+  text-transform: uppercase;
+  text-shadow: var(--phosphor-glow);
 }
 
-/* Enhanced Tab styles - Modern */
+/* Enhanced Tab styles - Retro Terminal */
 .tab-btn {
   position: relative;
   color: var(--text-secondary);
   transition: all var(--transition-base) var(--ease-out-smooth);
-  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  border-radius: 0;
+  font-family: 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.tab-btn::before {
+  content: '[ ';
+  opacity: 0;
+  transition: opacity var(--transition-base) var(--ease-out-smooth);
 }
 
 .tab-btn::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background-color: var(--text-primary);
-  border-radius: 2px;
-  transition: width var(--transition-base) var(--ease-out-smooth);
+  content: ' ]';
+  opacity: 0;
+  transition: opacity var(--transition-base) var(--ease-out-smooth);
 }
 
 .tab-btn:hover {
   color: var(--text-primary);
+  text-shadow: var(--phosphor-glow);
 }
 
+.tab-btn:hover::before,
 .tab-btn:hover::after {
-  width: 100%;
+  opacity: 1;
 }
 
 .tab-btn.active {
   color: var(--text-primary);
-  font-weight: 600;
+  font-weight: 700;
   background-color: var(--bg-elevated);
+  text-shadow: var(--phosphor-glow);
 }
 
+.tab-btn.active::before,
 .tab-btn.active::after {
-  width: 100%;
+  opacity: 1;
 }
 
 /* Enhanced Modal animations */
@@ -112,57 +120,72 @@ h1, h2, h3, h4, h5, h6 {
   background: var(--text-secondary);
 }
 
-/* Form input focus styles - Modern */
+/* Form input focus styles - Retro Terminal */
 input:focus,
 textarea:focus {
   outline: none;
-  border-color: var(--accent-primary);
-  box-shadow: 0 0 0 3px rgba(44, 44, 44, 0.1);
+  border-color: var(--text-primary);
+  box-shadow: 0 0 0 3px rgba(51, 255, 51, 0.2),
+              var(--phosphor-glow);
 }
 
-/* Enhanced Button interactions - Modern */
+input,
+textarea,
+select {
+  font-family: 'IBM Plex Mono', monospace;
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 2px solid var(--border-medium);
+  border-radius: 0;
+}
+
+/* Enhanced Button interactions - Retro Terminal */
 button {
   position: relative;
   overflow: hidden;
-  border-radius: var(--radius-md);
-  font-weight: 500;
-  letter-spacing: -0.01em;
+  border-radius: 0;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   transition: all var(--transition-base) var(--ease-out-smooth);
+  font-family: 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+  border: 2px solid var(--border-medium);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  text-shadow: var(--phosphor-glow);
 }
 
 button:hover {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   box-shadow: var(--shadow-md);
+  border-color: var(--text-secondary);
 }
 
 button:active {
-  transform: translateY(0) scale(0.98);
+  transform: translateY(1px);
+  box-shadow: var(--shadow-xs);
   transition: transform var(--transition-fast) var(--ease-out-smooth);
 }
 
 button::after {
   content: '';
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.4);
-  transform: translate(-50%, -50%);
-  transition: width var(--transition-slow) var(--ease-out-smooth),
-              height var(--transition-slow) var(--ease-out-smooth),
-              opacity var(--transition-base) var(--ease-out-smooth);
-  opacity: 0;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(51, 255, 51, 0.2),
+    transparent);
+  transition: left var(--transition-base) var(--ease-out-smooth);
 }
 
 button:active::after {
-  width: 300px;
-  height: 300px;
-  opacity: 1;
+  left: 100%;
 }
 
-/* Loading state */
+/* Loading state - Terminal Style */
 .loading {
   opacity: 0.5;
   pointer-events: none;
@@ -170,23 +193,20 @@ button:active::after {
 }
 
 .loading::after {
-  content: '';
+  content: '> LOADING...';
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 20px;
-  height: 20px;
-  margin: -10px 0 0 -10px;
-  border: 2px solid rgba(0, 0, 0, 0.1);
-  border-top-color: #000;
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
+  transform: translate(-50%, -50%);
+  font-family: 'IBM Plex Mono', monospace;
+  color: var(--text-primary);
+  text-shadow: var(--phosphor-glow);
+  animation: blink 1s step-end infinite;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
 }
 
 /* Empty state */
@@ -197,18 +217,27 @@ button:active::after {
   animation: fadeIn var(--transition-base) var(--ease-out-smooth);
 }
 
-/* Success message with enhanced animations */
+/* Success message - Terminal Style */
 .success-message {
   position: fixed;
   top: 1rem;
   right: 1rem;
-  background: #10b981;
-  color: white;
+  background: var(--bg-elevated);
+  color: var(--drop-active);
   padding: 1rem 1.5rem;
-  border-radius: 0.5rem;
-  box-shadow: var(--shadow-xl);
+  border-radius: 0;
+  border: 2px solid var(--drop-active);
+  box-shadow: var(--shadow-lg);
   animation: slideInRight var(--transition-slow) var(--ease-spring);
   z-index: 9999;
+  font-family: 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.success-message::before {
+  content: '> SUCCESS: ';
+  font-weight: 700;
 }
 
 @keyframes slideInRight {
@@ -222,18 +251,27 @@ button:active::after {
   }
 }
 
-/* Error message with enhanced animations */
+/* Error message - Terminal Style */
 .error-message {
   position: fixed;
   top: 1rem;
   right: 1rem;
-  background: #ef4444;
-  color: white;
+  background: var(--bg-elevated);
+  color: var(--drop-sold-out);
   padding: 1rem 1.5rem;
-  border-radius: 0.5rem;
-  box-shadow: var(--shadow-xl);
+  border-radius: 0;
+  border: 2px solid var(--drop-sold-out);
+  box-shadow: var(--shadow-lg);
   animation: slideInRight var(--transition-slow) var(--ease-spring), shake 0.4s ease-in-out;
   z-index: 9999;
+  font-family: 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.error-message::before {
+  content: '> ERROR: ';
+  font-weight: 700;
 }
 
 @keyframes shake {
