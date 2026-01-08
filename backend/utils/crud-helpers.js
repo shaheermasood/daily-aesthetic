@@ -4,6 +4,7 @@
  */
 
 const pool = require('../db/connection');
+const { createUniqueSlug } = require('./slug-generator');
 
 /**
  * Generic GET all with pagination, search, and filters
@@ -78,6 +79,20 @@ async function getAll(config) {
     paramIndex++;
   }
 
+  // Add status filter (default to published for public views)
+  if (reqQuery.status) {
+    query += ` AND status = $${paramIndex}`;
+    countQuery += ` AND status = $${paramIndex}`;
+    params.push(reqQuery.status);
+    paramIndex++;
+  }
+
+  // Add featured filter
+  if (reqQuery.featured === 'true') {
+    query += ` AND is_featured = true`;
+    countQuery += ` AND is_featured = true`;
+  }
+
   // Add ordering and pagination
   query += ` ORDER BY ${orderBy} OFFSET $${paramIndex} LIMIT $${paramIndex + 1}`;
   params.push(offset, limit);
@@ -109,12 +124,33 @@ async function getById(table, id) {
 }
 
 /**
+ * Generic GET by slug
+ * @param {string} table - Table name
+ * @param {string} slug - Record slug
+ * @returns {Promise<Object|null>} Record or null if not found
+ */
+async function getBySlug(table, slug) {
+  const result = await pool.query(`SELECT * FROM ${table} WHERE slug = $1`, [slug]);
+  return result.rows.length > 0 ? result.rows[0] : null;
+}
+
+/**
  * Generic CREATE
  * @param {string} table - Table name
  * @param {Object} data - Data to insert
  * @returns {Promise<Object>} Created record
  */
 async function create(table, data) {
+  // Auto-generate slug if not provided and title exists
+  if (!data.slug && data.title) {
+    data.slug = await createUniqueSlug(pool, table, data.title);
+  }
+
+  // Set published_at if status is published and not already set
+  if (data.status === 'published' && !data.published_at) {
+    data.published_at = new Date();
+  }
+
   const fields = Object.keys(data);
   const values = Object.values(data);
   const placeholders = fields.map((_, i) => `$${i + 1}`).join(', ');
@@ -133,6 +169,25 @@ async function create(table, data) {
  * @returns {Promise<Object|null>} Updated record or null if not found
  */
 async function update(table, id, data) {
+  // Get current record to check for changes
+  const current = await getById(table, id);
+  if (!current) return null;
+
+  // Regenerate slug if title changed
+  if (data.title && data.title !== current.title && !data.slug) {
+    data.slug = await createUniqueSlug(pool, table, data.title, id);
+  }
+
+  // Set published_at if status changes to published
+  if (data.status === 'published' && current.status !== 'published' && !data.published_at) {
+    data.published_at = new Date();
+  }
+
+  // Clear published_at if status changes from published
+  if (data.status && data.status !== 'published' && current.status === 'published') {
+    data.published_at = null;
+  }
+
   const fields = Object.keys(data);
   const values = Object.values(data);
   const setClause = fields.map((field, i) => `${field} = $${i + 1}`).join(', ');
@@ -157,6 +212,7 @@ async function remove(table, id) {
 module.exports = {
   getAll,
   getById,
+  getBySlug,
   create,
   update,
   remove
