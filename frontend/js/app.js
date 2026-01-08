@@ -21,6 +21,11 @@ const state = {
   io: null,
   scrollObserver: null,
   prefersReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+  filters: {
+    archive: {},
+    shop: {},
+    blog: {}
+  }
 };
 
 /* ================================================================
@@ -95,9 +100,32 @@ function renderArchive() {
     <div class="w-full min-h-screen border-l-0 md:border-l border-black">
       <div class="py-12 px-6 md:px-12 border-b border-black bg-[#FDFBF7]">
         <h2 class="text-4xl md:text-6xl font-bold mb-4">The Archive</h2>
-        <p class="font-serif text-gray-600 italic max-w-xl">
+        <p class="font-serif text-gray-600 italic max-w-xl mb-6">
           A curated collection of past works, preserving the dialogue between space, form, and light.
         </p>
+        <div class="flex flex-col md:flex-row gap-4 max-w-2xl">
+          <div class="flex-grow relative">
+            <input
+              type="text"
+              id="archive-search"
+              placeholder="Search projects..."
+              class="w-full px-4 py-3 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black/10"
+            />
+            <i data-lucide="search" class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          </div>
+          <input
+            type="text"
+            id="archive-tag"
+            placeholder="Filter by tag..."
+            class="px-4 py-3 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black/10 md:w-48"
+          />
+          <button
+            id="archive-clear"
+            class="px-6 py-3 bg-black text-white text-xs uppercase tracking-widest hover:bg-gray-800 transition"
+          >
+            Clear
+          </button>
+        </div>
       </div>
 
       <div id="archive-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0"></div>
@@ -116,14 +144,51 @@ function renderArchive() {
 function renderShop() {
   return `
     <div class="w-full min-h-screen border-l-0 md:border-l border-black">
-      <div class="py-12 px-6 md:px-12 border-b border-black bg-[#FDFBF7] flex flex-col md:flex-row justify-between md:items-end gap-6">
-        <div>
-          <h2 class="text-4xl md:text-6xl font-bold mb-4">The Shop</h2>
-          <p class="font-serif text-gray-600 italic max-w-xl">Curated objects of utility and beauty for the modern minimalist.</p>
+      <div class="py-12 px-6 md:px-12 border-b border-black bg-[#FDFBF7]">
+        <div class="flex flex-col md:flex-row justify-between md:items-end gap-6 mb-6">
+          <div>
+            <h2 class="text-4xl md:text-6xl font-bold mb-4">The Shop</h2>
+            <p class="font-serif text-gray-600 italic max-w-xl">Curated objects of utility and beauty for the modern minimalist.</p>
+          </div>
+          <div class="flex items-center space-x-2 text-sm font-bold uppercase tracking-widest text-gray-400 pb-2">
+            <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+            <span>Cart (0)</span>
+          </div>
         </div>
-        <div class="flex items-center space-x-2 text-sm font-bold uppercase tracking-widest text-gray-400 pb-2">
-          <i data-lucide="shopping-bag" class="w-4 h-4"></i>
-          <span>Cart (0)</span>
+        <div class="flex flex-col md:flex-row gap-4 max-w-4xl">
+          <div class="flex-grow relative">
+            <input
+              type="text"
+              id="shop-search"
+              placeholder="Search products..."
+              class="w-full px-4 py-3 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black/10"
+            />
+            <i data-lucide="search" class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          </div>
+          <input
+            type="text"
+            id="shop-tag"
+            placeholder="Filter by tag..."
+            class="px-4 py-3 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black/10 md:w-40"
+          />
+          <input
+            type="number"
+            id="shop-min-price"
+            placeholder="Min $"
+            class="px-4 py-3 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black/10 md:w-28"
+          />
+          <input
+            type="number"
+            id="shop-max-price"
+            placeholder="Max $"
+            class="px-4 py-3 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black/10 md:w-28"
+          />
+          <button
+            id="shop-clear"
+            class="px-6 py-3 bg-black text-white text-xs uppercase tracking-widest hover:bg-gray-800 transition"
+          >
+            Clear
+          </button>
         </div>
       </div>
 
@@ -142,10 +207,33 @@ function renderShop() {
 function renderBlog() {
   return `
     <div class="w-full min-h-screen border-l-0 md:border-l border-black">
-      <div class="py-16 px-6 flex justify-center border-b border-black">
-        <div class="text-center">
+      <div class="py-16 px-6 border-b border-black">
+        <div class="text-center max-w-3xl mx-auto">
           <h2 class="text-4xl font-bold uppercase tracking-widest mb-2">The Columnist</h2>
-          <p class="font-serif italic text-gray-500">Weekly musings on design theory.</p>
+          <p class="font-serif italic text-gray-500 mb-6">Weekly musings on design theory.</p>
+          <div class="flex flex-col md:flex-row gap-4 justify-center">
+            <div class="flex-grow relative max-w-md">
+              <input
+                type="text"
+                id="blog-search"
+                placeholder="Search articles..."
+                class="w-full px-4 py-3 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black/10"
+              />
+              <i data-lucide="search" class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            </div>
+            <input
+              type="text"
+              id="blog-author"
+              placeholder="Filter by author..."
+              class="px-4 py-3 border border-black text-sm focus:outline-none focus:ring-2 focus:ring-black/10 md:w-48"
+            />
+            <button
+              id="blog-clear"
+              class="px-6 py-3 bg-black text-white text-xs uppercase tracking-widest hover:bg-gray-800 transition"
+            >
+              Clear
+            </button>
+          </div>
         </div>
       </div>
 
@@ -289,7 +377,7 @@ async function loadArchiveItems(count = 6) {
   setLoading(true);
 
   try {
-    const response = await api.getProjects(state.archiveIndex, count);
+    const response = await api.getProjects(state.archiveIndex, count, state.filters.archive);
     const projects = response.data;
 
     let html = "";
@@ -341,7 +429,7 @@ async function loadShopItems(count = 6) {
   setLoading(true);
 
   try {
-    const response = await api.getProducts(state.shopIndex, count);
+    const response = await api.getProducts(state.shopIndex, count, state.filters.shop);
     const products = response.data;
 
     let html = "";
@@ -390,7 +478,7 @@ async function loadBlogArticle() {
   setLoading(true);
 
   try {
-    const response = await api.getArticles(state.blogIndex, 1);
+    const response = await api.getArticles(state.blogIndex, 1, state.filters.blog);
     const articles = response.data;
 
     if (articles.length === 0) {
@@ -497,6 +585,129 @@ function closeModal() {
 }
 
 /* ================================================================
+   Search handlers
+================================================================= */
+let searchTimeout = null;
+
+function setupArchiveSearch() {
+  const searchInput = $("#archive-search");
+  const tagInput = $("#archive-tag");
+  const clearBtn = $("#archive-clear");
+
+  if (!searchInput || !tagInput || !clearBtn) return;
+
+  const performSearch = () => {
+    state.filters.archive = {
+      search: searchInput.value.trim(),
+      tag: tagInput.value.trim()
+    };
+    state.archiveIndex = 0;
+    $("#archive-grid").innerHTML = '';
+    loadArchiveItems(9);
+  };
+
+  searchInput.addEventListener("input", () => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(performSearch, 500);
+  });
+
+  tagInput.addEventListener("input", () => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(performSearch, 500);
+  });
+
+  clearBtn.addEventListener("click", () => {
+    searchInput.value = '';
+    tagInput.value = '';
+    performSearch();
+  });
+}
+
+function setupShopSearch() {
+  const searchInput = $("#shop-search");
+  const tagInput = $("#shop-tag");
+  const minPriceInput = $("#shop-min-price");
+  const maxPriceInput = $("#shop-max-price");
+  const clearBtn = $("#shop-clear");
+
+  if (!searchInput || !tagInput || !minPriceInput || !maxPriceInput || !clearBtn) return;
+
+  const performSearch = () => {
+    state.filters.shop = {
+      search: searchInput.value.trim(),
+      tag: tagInput.value.trim(),
+      minPrice: minPriceInput.value ? parseFloat(minPriceInput.value) : undefined,
+      maxPrice: maxPriceInput.value ? parseFloat(maxPriceInput.value) : undefined
+    };
+    state.shopIndex = 0;
+    $("#shop-grid").innerHTML = '';
+    loadShopItems(9);
+  };
+
+  searchInput.addEventListener("input", () => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(performSearch, 500);
+  });
+
+  tagInput.addEventListener("input", () => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(performSearch, 500);
+  });
+
+  minPriceInput.addEventListener("input", () => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(performSearch, 500);
+  });
+
+  maxPriceInput.addEventListener("input", () => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(performSearch, 500);
+  });
+
+  clearBtn.addEventListener("click", () => {
+    searchInput.value = '';
+    tagInput.value = '';
+    minPriceInput.value = '';
+    maxPriceInput.value = '';
+    performSearch();
+  });
+}
+
+function setupBlogSearch() {
+  const searchInput = $("#blog-search");
+  const authorInput = $("#blog-author");
+  const clearBtn = $("#blog-clear");
+
+  if (!searchInput || !authorInput || !clearBtn) return;
+
+  const performSearch = () => {
+    state.filters.blog = {
+      search: searchInput.value.trim(),
+      author: authorInput.value.trim()
+    };
+    state.blogIndex = 0;
+    $("#blog-feed").innerHTML = '';
+    loadBlogArticle();
+  };
+
+  searchInput.addEventListener("input", () => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(performSearch, 500);
+  });
+
+  authorInput.addEventListener("input", () => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(performSearch, 500);
+  });
+
+  clearBtn.addEventListener("click", () => {
+    searchInput.value = '';
+    authorInput.value = '';
+    performSearch();
+  });
+}
+
+/* ================================================================
    Router
 ================================================================= */
 function router(view) {
@@ -517,6 +728,8 @@ function router(view) {
     app.innerHTML = renderArchive();
     refreshIcons();
     state.archiveIndex = 0;
+    state.filters.archive = {};
+    setupArchiveSearch();
     loadArchiveItems(9);
     mountInfiniteScroll();
     setupScrollAnimations();
@@ -527,6 +740,8 @@ function router(view) {
     app.innerHTML = renderShop();
     refreshIcons();
     state.shopIndex = 0;
+    state.filters.shop = {};
+    setupShopSearch();
     loadShopItems(9);
     mountInfiniteScroll();
     setupScrollAnimations();
@@ -537,6 +752,8 @@ function router(view) {
     app.innerHTML = renderBlog();
     refreshIcons();
     state.blogIndex = 0;
+    state.filters.blog = {};
+    setupBlogSearch();
     loadBlogArticle();
     mountInfiniteScroll();
     setupScrollAnimations();

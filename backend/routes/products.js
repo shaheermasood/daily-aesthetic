@@ -3,18 +3,60 @@ const router = express.Router();
 const pool = require('../db/connection');
 const { requireAuth } = require('../middleware/auth');
 
-// GET all products with pagination
+// GET all products with pagination and search
 router.get('/', async (req, res) => {
   try {
     const offset = parseInt(req.query.offset) || 0;
     const limit = parseInt(req.query.limit) || 6;
+    const search = req.query.search || '';
+    const tag = req.query.tag || '';
+    const minPrice = parseFloat(req.query.minPrice) || null;
+    const maxPrice = parseFloat(req.query.maxPrice) || null;
 
-    const result = await pool.query(
-      'SELECT * FROM products ORDER BY created_at DESC OFFSET $1 LIMIT $2',
-      [offset, limit]
-    );
+    let query = 'SELECT * FROM products WHERE 1=1';
+    let countQuery = 'SELECT COUNT(*) FROM products WHERE 1=1';
+    const params = [];
+    let paramIndex = 1;
 
-    const countResult = await pool.query('SELECT COUNT(*) FROM products');
+    // Add search filter
+    if (search) {
+      const searchPattern = `%${search}%`;
+      query += ` AND (title ILIKE $${paramIndex} OR description ILIKE $${paramIndex} OR tags ILIKE $${paramIndex})`;
+      countQuery += ` AND (title ILIKE $${paramIndex} OR description ILIKE $${paramIndex} OR tags ILIKE $${paramIndex})`;
+      params.push(searchPattern);
+      paramIndex++;
+    }
+
+    // Add tag filter
+    if (tag) {
+      const tagPattern = `%${tag}%`;
+      query += ` AND tags ILIKE $${paramIndex}`;
+      countQuery += ` AND tags ILIKE $${paramIndex}`;
+      params.push(tagPattern);
+      paramIndex++;
+    }
+
+    // Add price filters
+    if (minPrice !== null) {
+      query += ` AND price >= $${paramIndex}`;
+      countQuery += ` AND price >= $${paramIndex}`;
+      params.push(minPrice);
+      paramIndex++;
+    }
+
+    if (maxPrice !== null) {
+      query += ` AND price <= $${paramIndex}`;
+      countQuery += ` AND price <= $${paramIndex}`;
+      params.push(maxPrice);
+      paramIndex++;
+    }
+
+    // Add ordering and pagination
+    query += ` ORDER BY created_at DESC OFFSET $${paramIndex} LIMIT $${paramIndex + 1}`;
+    params.push(offset, limit);
+
+    const result = await pool.query(query, params);
+    const countResult = await pool.query(countQuery, params.slice(0, -2));
     const total = parseInt(countResult.rows[0].count);
 
     res.json({

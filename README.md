@@ -211,31 +211,52 @@ The admin panel provides a user-friendly interface for managing all content (pro
 ## API Endpoints
 
 ### Projects
-- `GET /api/projects?offset=0&limit=6` - Get paginated projects
+- `GET /api/projects?offset=0&limit=6&search=&tag=` - Get paginated projects with optional search and tag filters
 - `GET /api/projects/:id` - Get single project
-- `POST /api/projects` - Create new project
-- `PUT /api/projects/:id` - Update project
-- `DELETE /api/projects/:id` - Delete project
+- `POST /api/projects` - Create new project (requires authentication)
+- `PUT /api/projects/:id` - Update project (requires authentication)
+- `DELETE /api/projects/:id` - Delete project (requires authentication)
+
+**Query Parameters:**
+- `offset` - Starting index for pagination (default: 0)
+- `limit` - Number of items to return (default: 6)
+- `search` - Search across title, description, excerpt, and tags
+- `tag` - Filter by specific tag
 
 ### Articles
-- `GET /api/articles?offset=0&limit=1` - Get paginated articles
+- `GET /api/articles?offset=0&limit=1&search=&author=` - Get paginated articles with optional search and author filters
 - `GET /api/articles/:id` - Get single article
-- `POST /api/articles` - Create new article
-- `PUT /api/articles/:id` - Update article
-- `DELETE /api/articles/:id` - Delete article
+- `POST /api/articles` - Create new article (requires authentication)
+- `PUT /api/articles/:id` - Update article (requires authentication)
+- `DELETE /api/articles/:id` - Delete article (requires authentication)
+
+**Query Parameters:**
+- `offset` - Starting index for pagination (default: 0)
+- `limit` - Number of items to return (default: 1)
+- `search` - Search across title, content, and author
+- `author` - Filter by author name
 
 ### Products
-- `GET /api/products?offset=0&limit=6` - Get paginated products
+- `GET /api/products?offset=0&limit=6&search=&tag=&minPrice=&maxPrice=` - Get paginated products with optional search, tag, and price filters
 - `GET /api/products/:id` - Get single product
-- `POST /api/products` - Create new product
-- `PUT /api/products/:id` - Update product
-- `DELETE /api/products/:id` - Delete product
+- `POST /api/products` - Create new product (requires authentication)
+- `PUT /api/products/:id` - Update product (requires authentication)
+- `DELETE /api/products/:id` - Delete product (requires authentication)
+
+**Query Parameters:**
+- `offset` - Starting index for pagination (default: 0)
+- `limit` - Number of items to return (default: 6)
+- `search` - Search across title, description, and tags
+- `tag` - Filter by specific tag
+- `minPrice` - Minimum price filter
+- `maxPrice` - Maximum price filter
 
 ## Features
 
 ### Frontend
 - **Single-Page Application** - Client-side routing with smooth transitions
 - **Infinite Scroll** - Dynamically loads content as you scroll
+- **Search & Filtering** - Real-time search across all content types with advanced filters
 - **Modal System** - Rich detail views for projects and products
 - **Responsive Design** - Mobile-optimized layout
 - **Admin Panel** - Full content management system with authentication
@@ -245,6 +266,7 @@ The admin panel provides a user-friendly interface for managing all content (pro
 - **PostgreSQL Database** - Reliable data persistence
 - **Authentication System** - Secure admin login with sessions
 - **CRUD Operations** - Complete content management endpoints
+- **Advanced Search** - Full-text search with filtering capabilities
 
 ## Development
 
@@ -300,8 +322,8 @@ The backend uses the following environment variables (defined in `.env`):
 
 - ✅ ~~User authentication and authorization~~ (Completed)
 - ✅ ~~Admin panel for content management~~ (Completed)
+- ✅ ~~Search and filtering for content~~ (Completed)
 - Image upload functionality with cloud storage
-- Search and filtering for content
 - Shopping cart functionality
 - Newsletter subscription
 - Comment system
