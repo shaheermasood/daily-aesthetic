@@ -3,18 +3,43 @@ const router = express.Router();
 const pool = require('../db/connection');
 const { requireAuth } = require('../middleware/auth');
 
-// GET all articles with pagination
+// GET all articles with pagination and search
 router.get('/', async (req, res) => {
   try {
     const offset = parseInt(req.query.offset) || 0;
     const limit = parseInt(req.query.limit) || 1;
+    const search = req.query.search || '';
+    const author = req.query.author || '';
 
-    const result = await pool.query(
-      'SELECT * FROM articles ORDER BY created_at DESC OFFSET $1 LIMIT $2',
-      [offset, limit]
-    );
+    let query = 'SELECT * FROM articles WHERE 1=1';
+    let countQuery = 'SELECT COUNT(*) FROM articles WHERE 1=1';
+    const params = [];
+    let paramIndex = 1;
 
-    const countResult = await pool.query('SELECT COUNT(*) FROM articles');
+    // Add search filter
+    if (search) {
+      const searchPattern = `%${search}%`;
+      query += ` AND (title ILIKE $${paramIndex} OR content ILIKE $${paramIndex} OR author ILIKE $${paramIndex})`;
+      countQuery += ` AND (title ILIKE $${paramIndex} OR content ILIKE $${paramIndex} OR author ILIKE $${paramIndex})`;
+      params.push(searchPattern);
+      paramIndex++;
+    }
+
+    // Add author filter
+    if (author) {
+      const authorPattern = `%${author}%`;
+      query += ` AND author ILIKE $${paramIndex}`;
+      countQuery += ` AND author ILIKE $${paramIndex}`;
+      params.push(authorPattern);
+      paramIndex++;
+    }
+
+    // Add ordering and pagination
+    query += ` ORDER BY created_at DESC OFFSET $${paramIndex} LIMIT $${paramIndex + 1}`;
+    params.push(offset, limit);
+
+    const result = await pool.query(query, params);
+    const countResult = await pool.query(countQuery, params.slice(0, -2));
     const total = parseInt(countResult.rows[0].count);
 
     res.json({

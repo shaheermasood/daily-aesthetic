@@ -3,18 +3,43 @@ const router = express.Router();
 const pool = require('../db/connection');
 const { requireAuth } = require('../middleware/auth');
 
-// GET all projects with pagination
+// GET all projects with pagination and search
 router.get('/', async (req, res) => {
   try {
     const offset = parseInt(req.query.offset) || 0;
     const limit = parseInt(req.query.limit) || 6;
+    const search = req.query.search || '';
+    const tag = req.query.tag || '';
 
-    const result = await pool.query(
-      'SELECT * FROM projects ORDER BY created_at DESC OFFSET $1 LIMIT $2',
-      [offset, limit]
-    );
+    let query = 'SELECT * FROM projects WHERE 1=1';
+    let countQuery = 'SELECT COUNT(*) FROM projects WHERE 1=1';
+    const params = [];
+    let paramIndex = 1;
 
-    const countResult = await pool.query('SELECT COUNT(*) FROM projects');
+    // Add search filter
+    if (search) {
+      const searchPattern = `%${search}%`;
+      query += ` AND (title ILIKE $${paramIndex} OR description ILIKE $${paramIndex} OR excerpt ILIKE $${paramIndex} OR tags ILIKE $${paramIndex})`;
+      countQuery += ` AND (title ILIKE $${paramIndex} OR description ILIKE $${paramIndex} OR excerpt ILIKE $${paramIndex} OR tags ILIKE $${paramIndex})`;
+      params.push(searchPattern);
+      paramIndex++;
+    }
+
+    // Add tag filter
+    if (tag) {
+      const tagPattern = `%${tag}%`;
+      query += ` AND tags ILIKE $${paramIndex}`;
+      countQuery += ` AND tags ILIKE $${paramIndex}`;
+      params.push(tagPattern);
+      paramIndex++;
+    }
+
+    // Add ordering and pagination
+    query += ` ORDER BY created_at DESC OFFSET $${paramIndex} LIMIT $${paramIndex + 1}`;
+    params.push(offset, limit);
+
+    const result = await pool.query(query, params);
+    const countResult = await pool.query(countQuery, params.slice(0, -2));
     const total = parseInt(countResult.rows[0].count);
 
     res.json({
