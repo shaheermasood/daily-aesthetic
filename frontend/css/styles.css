@@ -6,26 +6,77 @@
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI',
-               'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  /* Classic Terminal Monospace Fonts */
+  font-family: 'IBM Plex Mono', 'Courier Prime', 'Courier New', 'Consolas', 'Monaco', monospace;
   font-size: var(--text-base);
   font-weight: 400;
-  line-height: 1.6;
-  letter-spacing: -0.01em;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
   overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+  /* CRT Text Rendering */
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+  text-rendering: optimizeSpeed;
+  /* Phosphor Glow Effect */
+  text-shadow: var(--phosphor-glow);
+  position: relative;
 }
 
-/* Modern Typography Hierarchy */
+/* CRT Scanlines Effect */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15) 0px,
+    transparent 1px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.15) 3px
+  );
+  animation: scanline 8s linear infinite;
+}
+
+@keyframes scanline {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(4px); }
+}
+
+/* CRT Screen Flicker */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9998;
+  background: rgba(0, 255, 0, 0.02);
+  opacity: 0;
+  animation: flicker 0.15s infinite;
+}
+
+@keyframes flicker {
+  0% { opacity: 0.02; }
+  50% { opacity: 0.03; }
+  100% { opacity: 0.02; }
+}
+
+/* Retro Terminal Typography Hierarchy */
 h1, h2, h3, h4, h5, h6 {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI',
-               'Roboto', 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 600;
+  font-family: 'IBM Plex Mono', 'Courier Prime', 'Courier New', monospace;
+  font-weight: 700;
   line-height: 1.2;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.05em;
   color: var(--text-primary);
+  text-shadow: var(--phosphor-glow);
+  text-transform: uppercase;
 }
 
 h1 { font-size: var(--text-4xl); font-weight: 700; }
@@ -36,46 +87,114 @@ h5 { font-size: var(--text-lg); font-weight: 500; }
 h6 { font-size: var(--text-base); font-weight: 500; }
 
 /* ------------------------------------------------------------------
-   Media & Image Effects - Subtle & Premium
+   Retro CRT Image Effects
 ------------------------------------------------------------------ */
 .img-newspaper {
-  filter: saturate(0.9) brightness(1.02);
+  /* CRT Monitor Color Distortion */
+  filter: contrast(1.1) brightness(0.9) saturate(1.2);
   transition: filter var(--transition-slow) var(--ease-out-smooth),
               transform var(--transition-slow) var(--ease-out-smooth),
               box-shadow var(--transition-base) var(--ease-out-smooth);
   will-change: filter, transform;
   border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+  box-shadow: 0 0 10px rgba(51, 255, 51, 0.3),
+              inset 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
 .group:hover .img-newspaper {
-  filter: saturate(1) brightness(1);
-  transform: scale(1.02);
+  filter: contrast(1.15) brightness(1) saturate(1.3);
+  transform: scale(1.01);
+  box-shadow: 0 0 15px rgba(51, 255, 51, 0.5),
+              inset 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
-/* Smooth image loading */
+/* CRT Image Rendering */
 img {
-  image-rendering: auto;
-  image-rendering: -webkit-optimize-contrast;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
 }
 
 img[loading="lazy"] {
   opacity: 0;
-  animation: fadeInImage var(--transition-slow) var(--ease-out-smooth) forwards;
+  animation: fadeInImageCRT var(--transition-slow) var(--ease-out-smooth) forwards;
 }
 
-@keyframes fadeInImage {
+@keyframes fadeInImageCRT {
   from {
     opacity: 0;
-    transform: scale(0.98);
+    filter: brightness(1.5);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    filter: brightness(1);
   }
 }
 
 /* ------------------------------------------------------------------
-   Modern Scrollbars - Minimal & Elegant
+   ASCII Art Borders & Decorative Elements
+------------------------------------------------------------------ */
+/* ASCII Border Decorations */
+.ascii-border-top::before {
+  content: "╔════════════════════════════════════════════════════════════════╗";
+  display: block;
+  color: var(--text-secondary);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  line-height: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 0.5;
+}
+
+.ascii-border-bottom::after {
+  content: "╚════════════════════════════════════════════════════════════════╝";
+  display: block;
+  color: var(--text-secondary);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  line-height: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 0.5;
+}
+
+/* Retro Terminal Section Dividers */
+.terminal-divider {
+  border: none;
+  height: 1px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--text-tertiary) 0px,
+    var(--text-tertiary) 4px,
+    transparent 4px,
+    transparent 8px
+  );
+  margin: var(--spacing-md) 0;
+  opacity: 0.3;
+}
+
+/* 1970s Punch Card Aesthetic */
+.punch-card-border {
+  border: 2px dashed var(--border-light);
+  position: relative;
+}
+
+.punch-card-border::before {
+  content: "⬤ ⬤ ⬤ ⬤ ⬤ ⬤ ⬤ ⬤ ⬤ ⬤ ⬤ ⬤ ⬤ ⬤ ⬤ ⬤ ⬤ ⬤";
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+  color: var(--text-tertiary);
+  font-size: 0.5rem;
+  opacity: 0.3;
+  text-align: center;
+}
+
+/* ------------------------------------------------------------------
+   Retro Terminal Scrollbars
 ------------------------------------------------------------------ */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
@@ -86,18 +205,19 @@ img[loading="lazy"] {
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--bg-primary);
+  border-left: 1px solid var(--border-subtle);
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--text-tertiary);
-  border-radius: var(--radius-full);
-  border: 2px solid transparent;
+  border-radius: 0;
+  border: 1px solid var(--border-light);
   background-clip: padding-box;
   transition: background var(--transition-base) var(--ease-out-smooth);
 }
@@ -122,7 +242,7 @@ img[loading="lazy"] {
   opacity: 1;
 }
 
-/* Skeleton loading animation */
+/* Terminal Loading Animation - Dot Matrix Style */
 @keyframes shimmer {
   0% {
     background-position: -1000px 0;
@@ -132,54 +252,169 @@ img[loading="lazy"] {
   }
 }
 
+@keyframes terminalLoad {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
 .skeleton {
-  background: linear-gradient(
+  background: repeating-linear-gradient(
     90deg,
-    #f0f0f0 0%,
-    #e0e0e0 20%,
-    #f0f0f0 40%,
-    #f0f0f0 100%
+    var(--bg-secondary) 0px,
+    var(--text-tertiary) 2px,
+    var(--bg-secondary) 4px,
+    transparent 4px,
+    transparent 8px
   );
   background-size: 1000px 100%;
-  animation: shimmer 2s infinite linear;
-  border-radius: 4px;
+  animation: shimmer 2s infinite linear, terminalLoad 1.5s infinite ease-in-out;
+  border-radius: 0;
+  border: 1px solid var(--border-subtle);
+}
+
+/* Loading Indicator - 1970s Style */
+.loading-dots::after {
+  content: '...';
+  animation: loadingDots 1.5s infinite;
+}
+
+@keyframes loadingDots {
+  0%, 20% { content: '.'; }
+  40% { content: '..'; }
+  60%, 100% { content: '...'; }
 }
 
 /* ------------------------------------------------------------------
-   Enhanced Nav Link Animations - Apple-style
+   Retro Computing Utility Classes
+------------------------------------------------------------------ */
+/* Dot Matrix Printer Text Effect */
+.dot-matrix-text {
+  font-family: 'VT323', 'Courier Prime', monospace;
+  letter-spacing: 0.15em;
+  font-weight: 400;
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5),
+               0 0 5px rgba(51, 255, 51, 0.5);
+}
+
+/* Altair 8800 Toggle Switch Style */
+.toggle-switch {
+  display: inline-block;
+  width: 12px;
+  height: 24px;
+  background: linear-gradient(to bottom, var(--text-tertiary), var(--bg-secondary));
+  border: 2px solid var(--border-medium);
+  border-radius: 2px;
+  position: relative;
+  cursor: pointer;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.toggle-switch.active {
+  background: linear-gradient(to bottom, var(--text-primary), var(--text-secondary));
+  box-shadow: 0 0 8px rgba(51, 255, 51, 0.6);
+}
+
+/* Teletype Paper Feed Holes */
+.paper-feed {
+  position: relative;
+  padding: var(--spacing-md);
+  background: var(--bg-card);
+  border-left: 20px solid var(--bg-secondary);
+}
+
+.paper-feed::before {
+  content: '⬤\A⬤\A⬤\A⬤\A⬤\A⬤\A⬤\A⬤\A⬤\A⬤';
+  white-space: pre;
+  position: absolute;
+  left: -15px;
+  top: 0;
+  font-size: 6px;
+  line-height: 1.5;
+  color: var(--text-tertiary);
+  opacity: 0.4;
+}
+
+/* CRT Vignette Effect */
+.crt-vignette {
+  position: relative;
+}
+
+.crt-vignette::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center,
+    transparent 0%,
+    transparent 60%,
+    rgba(0, 0, 0, 0.3) 100%);
+}
+
+/* ------------------------------------------------------------------
+   Retro Terminal Nav Link Styling
 ------------------------------------------------------------------ */
 .nav-link {
   position: relative;
   display: inline-block;
   color: var(--text-secondary);
   transition: color var(--transition-base) var(--ease-out-smooth),
-              transform var(--transition-fast) var(--ease-out-smooth);
+              text-shadow var(--transition-base) var(--ease-out-smooth);
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.nav-link::before {
+  content: "> ";
+  opacity: 0;
+  transition: opacity var(--transition-base) var(--ease-out-smooth);
 }
 
 .nav-link::after {
-  content: "";
+  content: "_";
   position: absolute;
-  width: 0;
-  height: 1.5px;
-  bottom: -6px;
-  left: 0;
-  background-color: var(--text-primary);
-  border-radius: var(--radius-full);
-  transition: width var(--transition-base) var(--ease-out-smooth);
+  width: auto;
+  height: auto;
+  bottom: -2px;
+  right: -12px;
+  background-color: transparent;
+  color: var(--text-primary);
+  opacity: 0;
+  animation: blink 1s step-end infinite;
+  transition: opacity var(--transition-base) var(--ease-out-smooth);
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
 }
 
 .nav-link:hover {
   color: var(--text-primary);
+  text-shadow: var(--phosphor-glow);
+}
+
+.nav-link:hover::before,
+.nav-link.active::before {
+  opacity: 1;
 }
 
 .nav-link:hover::after,
 .nav-link.active::after {
-  width: 100%;
+  opacity: 1;
 }
 
 .nav-link.active {
   color: var(--text-primary);
-  font-weight: 600;
+  font-weight: 700;
+  text-shadow: var(--phosphor-glow);
 }
 
 .nav-link:active {
@@ -378,7 +613,7 @@ img[loading="lazy"] {
 }
 
 /* ------------------------------------------------------------------
-   Enhanced Button Interactions - Apple-style Premium
+   Retro Terminal Button Interactions
 ------------------------------------------------------------------ */
 button,
 [role="button"] {
@@ -386,72 +621,146 @@ button,
   overflow: hidden;
   border-radius: var(--radius-md);
   transition: all var(--transition-base) var(--ease-out-smooth);
-  font-weight: 500;
-  letter-spacing: -0.01em;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  font-family: 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+  border: 2px solid var(--border-medium);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+  text-shadow: var(--phosphor-glow);
 }
 
 button:hover,
 [role="button"]:hover {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   box-shadow: var(--shadow-md);
+  border-color: var(--text-secondary);
+  background: var(--bg-card);
 }
 
 button:active,
 [role="button"]:active {
-  transform: translateY(0) scale(0.98);
+  transform: translateY(1px);
+  box-shadow: var(--shadow-xs);
   transition: transform var(--transition-fast) var(--ease-out-smooth);
 }
 
-/* Ripple effect */
+/* Terminal Command Prompt Effect */
+button::before {
+  content: '$ ';
+  opacity: 0.7;
+  margin-right: 4px;
+}
+
+/* Glitch effect on click */
 button::after,
 [role="button"]::after {
   content: '';
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.4);
-  transform: translate(-50%, -50%);
-  transition: width var(--transition-slow) var(--ease-out-smooth),
-              height var(--transition-slow) var(--ease-out-smooth),
-              opacity var(--transition-base) var(--ease-out-smooth);
-  opacity: 0;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(51, 255, 51, 0.2),
+    transparent);
+  transition: left var(--transition-base) var(--ease-out-smooth);
 }
 
 button:active::after,
 [role="button"]:active::after {
-  width: 300px;
-  height: 300px;
-  opacity: 1;
+  left: 100%;
 }
 
 /* ------------------------------------------------------------------
-   Accessibility - Modern Focus States
+   Accessibility - Retro Terminal Focus States
 ------------------------------------------------------------------ */
 *:focus {
   outline: none;
 }
 
 *:focus-visible {
-  outline: 2px solid var(--accent-primary);
-  outline-offset: 4px;
-  border-radius: var(--radius-sm);
-  box-shadow: 0 0 0 4px rgba(44, 44, 44, 0.1);
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+  border-radius: 0;
+  box-shadow: 0 0 0 4px rgba(51, 255, 51, 0.2),
+              var(--phosphor-glow);
 }
 
 a:focus-visible,
 button:focus-visible,
 [role="button"]:focus-visible {
-  outline: 2px solid var(--accent-primary);
-  outline-offset: 4px;
-  box-shadow: 0 0 0 4px rgba(44, 44, 44, 0.1);
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(51, 255, 51, 0.2),
+              var(--phosphor-glow);
 }
 
 /* ------------------------------------------------------------------
-   Page Transition Animations
+   Retro Computing Animations & Effects
 ------------------------------------------------------------------ */
+/* Teletype Text Reveal Animation */
+@keyframes teletype {
+  from {
+    width: 0;
+    opacity: 0;
+  }
+  to {
+    width: 100%;
+    opacity: 1;
+  }
+}
+
+/* Terminal Boot-up Sequence */
+@keyframes bootSequence {
+  0% {
+    opacity: 0;
+    filter: brightness(2);
+  }
+  20% {
+    opacity: 1;
+    filter: brightness(1.5);
+  }
+  100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+}
+
+/* Phosphor Glow Pulse */
+@keyframes phosphorPulse {
+  0%, 100% {
+    text-shadow: 0 0 10px rgba(51, 255, 51, 0.7),
+                 0 0 20px rgba(51, 255, 51, 0.5),
+                 0 0 30px rgba(51, 255, 51, 0.3);
+  }
+  50% {
+    text-shadow: 0 0 15px rgba(51, 255, 51, 0.9),
+                 0 0 25px rgba(51, 255, 51, 0.7),
+                 0 0 35px rgba(51, 255, 51, 0.5);
+  }
+}
+
+/* CRT Power-On Effect */
+@keyframes crtPowerOn {
+  0% {
+    transform: scaleY(0.001) scaleX(1);
+    filter: brightness(3);
+  }
+  50% {
+    transform: scaleY(0.01) scaleX(1);
+    filter: brightness(2);
+  }
+  100% {
+    transform: scaleY(1) scaleX(1);
+    filter: brightness(1);
+  }
+}
+
+/* Legacy Page Transitions */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -494,9 +803,9 @@ button:focus-visible,
   }
 }
 
-/* Apply animations to new content */
+/* Apply boot sequence to new content */
 #app > div {
-  animation: fadeIn var(--transition-slow) var(--ease-out-smooth);
+  animation: bootSequence 0.8s var(--ease-out-smooth);
 }
 
 /* ------------------------------------------------------------------
